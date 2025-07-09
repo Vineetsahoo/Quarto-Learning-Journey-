@@ -1,0 +1,475 @@
+---
+title: "🎬 Top Movies Analysis Report"
+subtitle: "Discover the Best Films by Genre"
+author: "Vineet Sahoo"
+date: today
+date-format: "MMMM DD, YYYY"
+format:
+    html:
+        theme: cosmo
+        toc: true
+        toc-depth: 3
+        toc-location: left
+        code-fold: true
+        code-summary: "Show Code"
+        code-tools: true
+        smooth-scroll: true
+        css: param-style.css
+        fig-width: 12
+        fig-height: 8
+        fig-responsive: true
+        embed-resources: false
+        page-layout: full
+        grid:
+            sidebar-width: 250px
+            body-width: 900px
+            margin-width: 150px
+        execute:
+            echo: false
+            warning: false
+            message: false
+            freeze: auto
+echo: false
+warning: false
+message: false
+execute:
+    freeze: auto
+---
+
+```{python}
+#| tags: [parameters]
+#| include: false
+
+num_movies = 5
+genre = "comedy"
+min_votes = 100  # Minimum vote count for quality filtering
+year_filter = None  # Optional year filter (e.g., 2020 for movies from 2020+)
+sort_by = "vote_average"  # Options: "vote_average", "vote_count", "revenue", "release_date"
+```
+
+```{python}
+#| include: false
+
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+from datetime import datetime
+
+# Load and process data
+df = pd.read_csv('TMDB-Small.csv')
+df['primary_genre'] = df['genres'].str.split(',').str[0].str.strip().str.lower()
+df['release_year'] = pd.to_datetime(df['release_date']).dt.year
+
+# Filter by genre and minimum votes for quality
+df_genre = df[(df['primary_genre'] == genre) & (df['vote_count'] >= min_votes)]
+
+# Apply optional year filter
+if year_filter:
+    df_genre = df_genre[df_genre['release_year'] >= year_filter]
+
+# Sort movies based on specified criteria
+sort_column = sort_by if sort_by in df_genre.columns else 'vote_average'
+ascending_sort = False if sort_by in ['vote_average', 'vote_count', 'revenue'] else True
+top_movies = df_genre.sort_values(sort_column, ascending=ascending_sort).head(num_movies)
+
+# Calculate statistics
+avg_rating = top_movies['vote_average'].mean()
+total_revenue = top_movies['revenue'].sum()
+avg_runtime = top_movies['runtime'].mean()
+min_year = int(top_movies['release_year'].min()) if not pd.isna(top_movies['release_year'].min()) else 'N/A'
+max_year = int(top_movies['release_year'].max()) if not pd.isna(top_movies['release_year'].max()) else 'N/A'
+year_range = f"{min_year} - {max_year}"
+
+# Color scheme
+colors = ['#6366F1', '#EC4899', '#10B981', '#F59E0B', '#EF4444']
+```
+
+```{python}
+#| echo: false
+hero_date = datetime.now().strftime('%B %d, %Y')
+hero_min_votes = f"{min_votes:,}"
+hero_sort_by = sort_by.replace('_', ' ').title()
+hero_year_filter = f"{year_filter}+" if year_filter else "All Years"
+```
+
+::: {.hero-banner}
+# 🎭 Top `{python} num_movies` Movies in `{python} genre.title()` 
+
+*Curated selection of the highest-rated films based on audience reviews*
+
+**Analysis Date:** `{python} hero_date` | **Minimum Votes:** `{python} hero_min_votes` | **Sort By:** `{python} hero_sort_by` | **Year Filter:** `{python} hero_year_filter`
+:::
+
+```{python}
+#| echo: false
+# Format statistics for display
+avg_rating_display = f"{avg_rating:.1f}/10"
+total_revenue_display = f"${total_revenue/1e9:.1f}B" if total_revenue > 0 else "N/A"
+avg_runtime_display = f"{avg_runtime:.0f} min" if not pd.isna(avg_runtime) else "N/A"
+```
+
+## 📊 Quick Statistics
+
+::: {.stats-grid}
+
+::: {.stat-card}
+**Average Rating**  
+`{python} avg_rating_display`
+:::
+
+::: {.stat-card}
+**Total Revenue**  
+`{python} total_revenue_display`
+:::
+
+::: {.stat-card}
+**Average Runtime**  
+`{python} avg_runtime_display`
+:::
+
+::: {.stat-card}
+**Year Range**  
+`{python} year_range`
+:::
+
+:::
+
+## 📈 Performance Visualization
+
+```{python}
+#| fig-cap: "Rating and popularity comparison of top movies"
+#| fig-width: 14
+#| fig-height: 10
+
+# Create an enhanced visualization optimized for HTML
+fig = make_subplots(
+    rows=2, cols=2,
+    subplot_titles=('Ratings Comparison', 'Vote Count Distribution', 
+                   'Revenue Performance', 'Release Timeline'),
+    specs=[[{"type": "bar"}, {"type": "scatter"}],
+           [{"type": "bar"}, {"type": "scatter"}]],
+    vertical_spacing=0.15,
+    horizontal_spacing=0.1
+)
+
+# 1. Ratings comparison
+fig.add_trace(
+    go.Bar(
+        x=top_movies['title'].str[:20] + '...',
+        y=top_movies['vote_average'],
+        marker_color=colors[:len(top_movies)],
+        name="Rating",
+        text=top_movies['vote_average'].round(1),
+        textposition='outside'
+    ),
+    row=1, col=1
+)
+
+# 2. Vote count vs rating
+fig.add_trace(
+    go.Scatter(
+        x=top_movies['vote_count'],
+        y=top_movies['vote_average'],
+        mode='markers+text',
+        marker=dict(size=15, color=colors[:len(top_movies)]),
+        text=list(range(1, len(top_movies) + 1)),
+        textposition='middle center',
+        textfont=dict(color='white', size=12),
+        name="Votes vs Rating"
+    ),
+    row=1, col=2
+)
+
+# 3. Revenue comparison (if available)
+if top_movies['revenue'].sum() > 0:
+    fig.add_trace(
+        go.Bar(
+            x=top_movies['title'].str[:20] + '...',
+            y=top_movies['revenue'] / 1e6,
+            marker_color=colors[:len(top_movies)],
+            name="Revenue (M$)",
+            text=(top_movies['revenue'] / 1e6).round(1),
+            textposition='outside'
+        ),
+        row=2, col=1
+    )
+
+# 4. Release year timeline
+fig.add_trace(
+    go.Scatter(
+        x=top_movies['release_year'],
+        y=top_movies['vote_average'],
+        mode='markers+lines+text',
+        marker=dict(size=12, color=colors[:len(top_movies)]),
+        text=list(range(1, len(top_movies) + 1)),
+        textposition='top center',
+        name="Timeline"
+    ),
+    row=2, col=2
+)
+
+fig.update_layout(
+    height=800,
+    showlegend=False,
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12),
+    title_font_size=16,
+    margin=dict(t=60, b=40, l=40, r=40)
+)
+
+fig.update_xaxes(title_text="Movies", row=1, col=1)
+fig.update_yaxes(title_text="Rating", row=1, col=1)
+fig.update_xaxes(title_text="Vote Count", row=1, col=2)
+fig.update_yaxes(title_text="Rating", row=1, col=2)
+fig.update_xaxes(title_text="Movies", row=2, col=1)
+fig.update_yaxes(title_text="Revenue (M$)", row=2, col=1)
+fig.update_xaxes(title_text="Release Year", row=2, col=2)
+fig.update_yaxes(title_text="Rating", row=2, col=2)
+
+fig.show()
+```
+
+## 🏆 Top `{python} num_movies` `{python} genre.title()` Movies
+
+```{python}
+#| results: asis
+
+# Generate movie cards dynamically
+for i in range(len(top_movies)):
+    movie = top_movies.iloc[i]
+    rank = i + 1
+    
+    # Prepare safe variables for f-string formatting
+    movie_year = int(movie['release_year']) if not pd.isna(movie['release_year']) else 'N/A'
+    movie_runtime = f"{int(movie['runtime'])} min" if not pd.isna(movie['runtime']) else 'N/A min'
+    movie_revenue = f"${movie['revenue']/1e6:.1f}M" if movie['revenue'] > 0 else 'Not available'
+    movie_revenue_note = '(Available)' if movie['revenue'] > 0 else '(Not available)'
+    movie_overview = movie['overview'] if pd.notna(movie['overview']) else 'No overview available.'
+    movie_votes = f"{movie['vote_count']:,}"
+    
+    print(f"""
+::: {{.movie-card}}
+
+### #{rank} {movie['title']} ({movie_year})
+
+::: {{.movie-details}}
+
+::: {{.movie-stats}}
+- **Rating:** ⭐ {movie['vote_average']:.1f}/10
+- **Votes:** 👥 {movie_votes}
+- **Runtime:** ⏱️ {movie_runtime}
+- **Revenue:** 💰 {movie_revenue} {movie_revenue_note}
+:::
+
+::: {{.movie-description}}
+**Plot Summary:**  
+{movie_overview}
+:::
+
+:::
+
+:::
+
+""")
+```
+
+## 📊 Detailed Analysis
+
+### Genre Performance Overview
+
+```{python}
+#| fig-cap: "Comprehensive genre analysis showing distribution patterns"
+
+# Create genre comparison
+fig = go.Figure()
+
+# Rating distribution
+fig.add_trace(go.Histogram(
+    x=top_movies['vote_average'],
+    name='Rating Distribution',
+    marker_color='#6366F1',
+    opacity=0.7,
+    nbinsx=10
+))
+
+fig.update_layout(
+    title=f"Rating Distribution for Top {num_movies} {genre.title()} Movies",
+    xaxis_title="Rating",
+    yaxis_title="Count",
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    height=400
+)
+
+fig.show()
+```
+
+### Movie Comparison Table
+
+```{python}
+#| label: tbl-comparison
+#| tbl-cap: "Detailed comparison of top movies"
+
+# Create comparison table
+comparison_df = top_movies[['title', 'release_year', 'vote_average', 'vote_count', 'runtime', 'revenue']].copy()
+comparison_df.columns = ['Title', 'Year', 'Rating', 'Votes', 'Runtime (min)', 'Revenue ($)']
+comparison_df['Revenue ($)'] = comparison_df['Revenue ($)'].apply(lambda x: f"${x:,.0f}" if x > 0 else "N/A")
+comparison_df['Votes'] = comparison_df['Votes'].apply(lambda x: f"{x:,}")
+comparison_df['Runtime (min)'] = comparison_df['Runtime (min)'].apply(lambda x: f"{int(x)}" if not pd.isna(x) else "N/A")
+comparison_df['Year'] = comparison_df['Year'].apply(lambda x: f"{int(x)}" if not pd.isna(x) else "N/A")
+comparison_df.index = range(1, len(comparison_df) + 1)
+
+comparison_df
+```
+
+```{python}
+#| echo: false
+
+# Prepare insight variables
+highest_rated_title = top_movies.iloc[0]['title']
+highest_rated_score = top_movies.iloc[0]['vote_average']
+most_popular_title = top_movies.loc[top_movies['vote_count'].idxmax()]['title']
+most_popular_votes = f"{top_movies['vote_count'].max():,}"
+top_earner_title = top_movies.loc[top_movies['revenue'].idxmax()]['title'] if top_movies['revenue'].max() > 0 else 'Revenue data unavailable'
+top_earner_revenue = f"${top_movies['revenue'].max()/1e6:.1f}M" if top_movies['revenue'].max() > 0 else 'N/A'
+era_min = int(top_movies['release_year'].min()) if not pd.isna(top_movies['release_year'].min()) else 'N/A'
+era_max = int(top_movies['release_year'].max()) if not pd.isna(top_movies['release_year'].max()) else 'N/A'
+```
+
+## 🔍 Key Insights
+
+::: {.insights-section}
+
+::: {.insight-card}
+**🎯 Highest Rated**  
+*`{python} highest_rated_title`* leads with `{python} highest_rated_score` stars
+:::
+
+::: {.insight-card}
+**📈 Most Popular**  
+*`{python} most_popular_title`* has the most votes with `{python} most_popular_votes` reviews
+:::
+
+::: {.insight-card}
+**💰 Top Earner**  
+*`{python} top_earner_title`* generated `{python} top_earner_revenue`
+:::
+
+::: {.insight-card}
+**📅 Era Span**  
+Movies span from `{python} era_min` to `{python} era_max`
+:::
+
+:::
+
+## 🎭 Genre Performance Comparison
+
+```{python}
+#| fig-cap: "Comparison of selected genre against other popular genres"
+#| fig-width: 12
+#| fig-height: 6
+
+# Get all genres for comparison
+all_genres_df = df[df['vote_count'] >= min_votes].copy()
+genre_stats = all_genres_df.groupby('primary_genre').agg({
+    'vote_average': 'mean',
+    'vote_count': 'sum',
+    'revenue': 'mean',
+    'title': 'count'
+}).round(2)
+genre_stats.columns = ['Avg_Rating', 'Total_Votes', 'Avg_Revenue', 'Movie_Count']
+genre_stats = genre_stats[genre_stats['Movie_Count'] >= 3].sort_values('Avg_Rating', ascending=False).head(8)
+
+# Highlight current genre
+colors_genre = ['#6366F1' if idx == genre else '#94A3B8' for idx in genre_stats.index]
+
+fig = go.Figure()
+
+# Add bar chart
+fig.add_trace(go.Bar(
+    x=genre_stats.index,
+    y=genre_stats['Avg_Rating'],
+    marker_color=colors_genre,
+    text=genre_stats['Avg_Rating'],
+    textposition='outside',
+    name='Average Rating',
+    hovertemplate='<b>%{x}</b><br>Rating: %{y}<br>Movies: %{customdata}<extra></extra>',
+    customdata=genre_stats['Movie_Count']
+))
+
+fig.update_layout(
+    title=f"Genre Performance Comparison (Highlighting {genre.title()})",
+    xaxis_title="Genre",
+    yaxis_title="Average Rating",
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    height=500,
+    font=dict(size=12),
+    showlegend=False,
+    margin=dict(t=60, b=80, l=60, r=40)
+)
+
+fig.update_xaxes(tickangle=45)
+fig.show()
+```
+
+```{python}
+#| echo: false
+
+# Prepare summary variables
+summary_avg_rating = f"{avg_rating:.1f}"
+summary_min_votes = f"{min_votes:,}"
+summary_total_revenue = f"${total_revenue/1e9:.1f}B" if total_revenue > 0 else "revenue data limited"
+summary_avg_runtime = f"{avg_runtime:.0f}" if not pd.isna(avg_runtime) else "N/A"
+summary_sort_by = sort_by.replace('_', ' ').title()
+summary_time_period = f"Movies from {year_filter} onwards" if year_filter else "All available years included"
+summary_methodology_note = f"Analysis limited to movies released from {year_filter} onwards." if year_filter else "No year restrictions applied."
+summary_report_date = datetime.now().strftime('%B %d, %Y at %I:%M %p')
+summary_parameters = f"Genre={genre.title()}, Count={num_movies}, Sort={sort_by.replace('_', ' ').title()}, Min Votes={min_votes:,}"
+```
+
+## 📋 Summary
+
+This analysis of the top `{python} num_movies` `{python} genre` movies reveals:
+
+- **Quality Consistency:** Average rating of `{python} summary_avg_rating` demonstrates high quality across selections
+- **Audience Engagement:** All movies meet the minimum threshold of `{python} summary_min_votes` votes
+- **Commercial Success:** Combined revenue of `{python} summary_total_revenue`
+- **Runtime:** Average duration of `{python} summary_avg_runtime` minutes
+- **Sorting Criteria:** Results sorted by `{python} summary_sort_by` for optimal selection
+- **Time Period:** `{python} summary_time_period`
+
+::: {.callout-note}
+**Methodology Note:** Movies are ranked by `{python} summary_sort_by` with a minimum vote threshold of `{python} summary_min_votes` to ensure statistical significance and quality assessment. `{python} summary_methodology_note` 
+:::
+
+---
+
+*Report generated on `{python} summary_report_date` | Parameters: `{python} summary_parameters`*
+
+::: {.callout-tip}
+## 💡 **Interactive Features**
+
+This HTML report includes several interactive elements:
+- **📊 Hover over charts** for detailed information
+- **🔍 Expand code sections** to see the analysis behind each visualization  
+- **📱 Responsive design** adapts to your screen size
+- **🔗 Smooth navigation** with the table of contents sidebar
+
+**💡 Customization Guide**
+
+This report can be customized with different parameters:
+- **num_movies**: Number of top movies to analyze (e.g., 10, 20)
+- **genre**: Movie genre to focus on (e.g., "action", "drama", "sci-fi")
+- **min_votes**: Minimum vote threshold for quality (e.g., 50, 500)
+- **year_filter**: Minimum release year (e.g., 2010, 2020)
+- **sort_by**: Sorting criteria ("vote_average", "vote_count", "revenue", "release_date")
+
+**Example usage:**
+```bash
+quarto render parameterized-report.qmd -P genre:action -P num_movies:10 -P min_votes:200
+```
+:::

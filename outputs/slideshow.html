@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="slideshow_files/libs/clipboard/clipboard.min.js"></script>
+<script src="slideshow_files/libs/quarto-html/tabby.min.js"></script>
+<script src="slideshow_files/libs/quarto-html/popper.min.js"></script>
+<script src="slideshow_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="slideshow_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="slideshow_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="slideshow_files/libs/quarto-html/quarto-syntax-highlighting-dark-0348920b7671f696dc9078d39bff215e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="Vineet Sahoo">
+  <meta name="dcterms.date" content="2025-07-08">
+  <title>Advanced Python Programming Concepts</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="slideshow_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="slideshow_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #e1e4e8; background-color: #24292e; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #e1e4e8; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #f97583; } /* Attribute */
+    code span.bn { color: #79b8ff; } /* BaseN */
+    code span.bu { color: #f97583; } /* BuiltIn */
+    code span.cf { color: #f97583; } /* ControlFlow */
+    code span.ch { color: #9ecbff; } /* Char */
+    code span.cn { color: #79b8ff; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #f97583; } /* DataType */
+    code span.dv { color: #79b8ff; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #f97583; font-weight: bold; } /* Extension */
+    code span.fl { color: #79b8ff; } /* Float */
+    code span.fu { color: #b392f0; } /* Function */
+    code span.im { color: #9ecbff; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #f97583; } /* Keyword */
+    code span.op { color: #e1e4e8; } /* Operator */
+    code span.ot { color: #b392f0; } /* Other */
+    code span.pp { color: #f97583; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #79b8ff; } /* SpecialChar */
+    code span.ss { color: #9ecbff; } /* SpecialString */
+    code span.st { color: #9ecbff; } /* String */
+    code span.va { color: #ffab70; } /* Variable */
+    code span.vs { color: #9ecbff; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="slideshow_files/libs/revealjs/dist/theme/quarto-091ebfb71d12db7fc524ec91495e1509.css">
+  <link href="slideshow_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="slideshow_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="slideshow_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="slideshow_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="slideshow_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="slideshow_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Advanced Python Programming Concepts</h1>
+  <p class="subtitle">Interactive Code Demonstrations</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vineet Sahoo 
+</div>
+</div>
+</div>
+
+  <p class="date">2025-07-08</p>
+</section>
+<section>
+<section id="welcome-to-python-programming" class="title-slide slide level1 center" data-background-color="#1e3a8a">
+<h1>Welcome to Python Programming</h1>
+
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>🎯 Learning Objectives</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><strong>Functions &amp; Control Flow</strong></li>
+<li><strong>Data Structures</strong></li>
+<li><strong>Object-Oriented Programming</strong></li>
+<li><strong>Error Handling</strong></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><strong>File Operations</strong></li>
+<li><strong>Data Analysis</strong></li>
+<li><strong>Best Practices</strong></li>
+<li><strong>Real-world Examples</strong></li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>This presentation covers essential Python programming concepts with interactive code examples and practical demonstrations.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="basic-functions-control-flow" class="title-slide slide level1 center" data-background-color="#059669">
+<h1>Basic Functions &amp; Control Flow</h1>
+
+</section>
+<section id="simple-function-example" class="slide level2">
+<h2>Simple Function Example</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Code</a></li><li><a href="#tabset-1-2">Output</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div id="808b8fbe" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="kw">def</span> example_function(a):</span>
+<span id="cb1-2"><a href=""></a>    <span class="cf">if</span> a <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb1-3"><a href=""></a>        <span class="cf">return</span> <span class="st">"A is positive!"</span></span>
+<span id="cb1-4"><a href=""></a>    <span class="cf">elif</span> a <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb1-5"><a href=""></a>        <span class="cf">return</span> <span class="st">"A is negative!"</span></span>
+<span id="cb1-6"><a href=""></a>    <span class="cf">else</span>:</span>
+<span id="cb1-7"><a href=""></a>        <span class="cf">return</span> <span class="st">"A is zero!"</span></span>
+<span id="cb1-8"><a href=""></a></span>
+<span id="cb1-9"><a href=""></a><span class="co"># Test the function</span></span>
+<span id="cb1-10"><a href=""></a>test_values <span class="op">=</span> [<span class="dv">5</span>, <span class="op">-</span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">10</span>]</span>
+<span id="cb1-11"><a href=""></a><span class="cf">for</span> value <span class="kw">in</span> test_values:</span>
+<span id="cb1-12"><a href=""></a>    result <span class="op">=</span> example_function(value)</span>
+<span id="cb1-13"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"example_function(</span><span class="sc">{</span>value<span class="sc">}</span><span class="ss">) = </span><span class="sc">{</span>result<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>example_function(5) = A is positive!
+example_function(-3) = A is negative!
+example_function(0) = A is zero!
+example_function(10) = A is positive!</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2">
+<p>The function will evaluate different numbers and return appropriate messages based on their sign.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="function-with-step-by-step-walkthrough" class="slide level2">
+<h2>Function with Step-by-Step Walkthrough</h2>
+<div class="fragment">
+<p>Let’s trace through the execution step by step:</p>
+</div>
+<div class="sourceCode" id="cb3" data-code-line-numbers="1|2-3|4-5|6-7|8-12|1-12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="kw">def</span> example_function(a):</span>
+<span id="cb3-2"><a href=""></a>    <span class="cf">if</span> a <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-3"><a href=""></a>        <span class="cf">return</span> <span class="st">"A is positive!"</span></span>
+<span id="cb3-4"><a href=""></a>    <span class="cf">elif</span> a <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-5"><a href=""></a>        <span class="cf">return</span> <span class="st">"A is negative!"</span></span>
+<span id="cb3-6"><a href=""></a>    <span class="cf">else</span>:</span>
+<span id="cb3-7"><a href=""></a>        <span class="cf">return</span> <span class="st">"A is zero!"</span></span>
+<span id="cb3-8"><a href=""></a></span>
+<span id="cb3-9"><a href=""></a><span class="co"># Interactive testing</span></span>
+<span id="cb3-10"><a href=""></a>user_input <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb3-11"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Testing with value: </span><span class="sc">{</span>user_input<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-12"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Result: </span><span class="sc">{</span>example_function(user_input)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="advanced-functions" class="title-slide slide level1 center" data-background-color="#7c3aed">
+<h1>Advanced Functions</h1>
+
+</section>
+<section id="lambda-functions-higher-order-functions" class="slide level2">
+<h2>Lambda Functions &amp; Higher-Order Functions</h2>
+<div id="ecf574ec" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="co"># Lambda functions for quick operations</span></span>
+<span id="cb4-2"><a href=""></a>square <span class="op">=</span> <span class="kw">lambda</span> x: x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb4-3"><a href=""></a>is_even <span class="op">=</span> <span class="kw">lambda</span> x: x <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span></span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a><span class="co"># Higher-order function example</span></span>
+<span id="cb4-6"><a href=""></a><span class="kw">def</span> apply_operation(numbers, operation):</span>
+<span id="cb4-7"><a href=""></a>    <span class="cf">return</span> [operation(num) <span class="cf">for</span> num <span class="kw">in</span> numbers]</span>
+<span id="cb4-8"><a href=""></a></span>
+<span id="cb4-9"><a href=""></a><span class="co"># Demonstration</span></span>
+<span id="cb4-10"><a href=""></a>numbers <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>]</span>
+<span id="cb4-11"><a href=""></a></span>
+<span id="cb4-12"><a href=""></a>squared_numbers <span class="op">=</span> apply_operation(numbers, square)</span>
+<span id="cb4-13"><a href=""></a>even_numbers <span class="op">=</span> [num <span class="cf">for</span> num <span class="kw">in</span> numbers <span class="cf">if</span> is_even(num)]</span>
+<span id="cb4-14"><a href=""></a></span>
+<span id="cb4-15"><a href=""></a><span class="bu">print</span>(<span class="st">"Original numbers:"</span>, numbers)</span>
+<span id="cb4-16"><a href=""></a><span class="bu">print</span>(<span class="st">"Squared numbers:"</span>, squared_numbers)</span>
+<span id="cb4-17"><a href=""></a><span class="bu">print</span>(<span class="st">"Even numbers:"</span>, even_numbers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Original numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Squared numbers: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+Even numbers: [2, 4, 6, 8, 10]</code></pre>
+</div>
+</div>
+</section>
+<section id="decorators-in-action" class="slide level2">
+<h2>Decorators in Action</h2>
+<div class="sourceCode" id="cb6" data-code-line-numbers="1-6|8-11|13-19|21-24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> time</span>
+<span id="cb6-2"><a href=""></a><span class="im">from</span> functools <span class="im">import</span> wraps</span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a><span class="kw">def</span> timing_decorator(func):</span>
+<span id="cb6-5"><a href=""></a>    <span class="at">@wraps</span>(func)</span>
+<span id="cb6-6"><a href=""></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb6-7"><a href=""></a>        start_time <span class="op">=</span> time.time()</span>
+<span id="cb6-8"><a href=""></a>        result <span class="op">=</span> func(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb6-9"><a href=""></a>        end_time <span class="op">=</span> time.time()</span>
+<span id="cb6-10"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>func<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss"> executed in </span><span class="sc">{</span>end_time <span class="op">-</span> start_time<span class="sc">:.4f}</span><span class="ss"> seconds"</span>)</span>
+<span id="cb6-11"><a href=""></a>        <span class="cf">return</span> result</span>
+<span id="cb6-12"><a href=""></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb6-13"><a href=""></a></span>
+<span id="cb6-14"><a href=""></a><span class="at">@timing_decorator</span></span>
+<span id="cb6-15"><a href=""></a><span class="kw">def</span> slow_calculation(n):</span>
+<span id="cb6-16"><a href=""></a>    <span class="co">"""Simulate a slow calculation"""</span></span>
+<span id="cb6-17"><a href=""></a>    total <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-18"><a href=""></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb6-19"><a href=""></a>        total <span class="op">+=</span> i <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb6-20"><a href=""></a>    <span class="cf">return</span> total</span>
+<span id="cb6-21"><a href=""></a></span>
+<span id="cb6-22"><a href=""></a><span class="co"># Test the decorated function</span></span>
+<span id="cb6-23"><a href=""></a>result <span class="op">=</span> slow_calculation(<span class="dv">100000</span>)</span>
+<span id="cb6-24"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Calculation result: </span><span class="sc">{</span>result<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="data-structures-analysis" class="title-slide slide level1 center" data-background-color="#dc2626">
+<h1>Data Structures &amp; Analysis</h1>
+
+</section>
+<section id="working-with-complex-data" class="slide level2">
+<h2>Working with Complex Data</h2>
+<div id="cd65ba0f" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="im">import</span> json</span>
+<span id="cb7-2"><a href=""></a><span class="im">from</span> collections <span class="im">import</span> defaultdict, Counter</span>
+<span id="cb7-3"><a href=""></a></span>
+<span id="cb7-4"><a href=""></a><span class="co"># Sample data structure</span></span>
+<span id="cb7-5"><a href=""></a>student_data <span class="op">=</span> [</span>
+<span id="cb7-6"><a href=""></a>    {<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"grades"</span>: [<span class="dv">85</span>, <span class="dv">92</span>, <span class="dv">78</span>, <span class="dv">96</span>], <span class="st">"major"</span>: <span class="st">"Computer Science"</span>},</span>
+<span id="cb7-7"><a href=""></a>    {<span class="st">"name"</span>: <span class="st">"Bob"</span>, <span class="st">"grades"</span>: [<span class="dv">76</span>, <span class="dv">81</span>, <span class="dv">72</span>, <span class="dv">89</span>], <span class="st">"major"</span>: <span class="st">"Mathematics"</span>},</span>
+<span id="cb7-8"><a href=""></a>    {<span class="st">"name"</span>: <span class="st">"Charlie"</span>, <span class="st">"grades"</span>: [<span class="dv">94</span>, <span class="dv">87</span>, <span class="dv">91</span>, <span class="dv">93</span>], <span class="st">"major"</span>: <span class="st">"Computer Science"</span>},</span>
+<span id="cb7-9"><a href=""></a>    {<span class="st">"name"</span>: <span class="st">"Diana"</span>, <span class="st">"grades"</span>: [<span class="dv">88</span>, <span class="dv">85</span>, <span class="dv">90</span>, <span class="dv">87</span>], <span class="st">"major"</span>: <span class="st">"Physics"</span>},</span>
+<span id="cb7-10"><a href=""></a>    {<span class="st">"name"</span>: <span class="st">"Eve"</span>, <span class="st">"grades"</span>: [<span class="dv">79</span>, <span class="dv">83</span>, <span class="dv">86</span>, <span class="dv">82</span>], <span class="st">"major"</span>: <span class="st">"Mathematics"</span>}</span>
+<span id="cb7-11"><a href=""></a>]</span>
+<span id="cb7-12"><a href=""></a></span>
+<span id="cb7-13"><a href=""></a><span class="co"># Data analysis</span></span>
+<span id="cb7-14"><a href=""></a><span class="kw">def</span> analyze_student_data(data):</span>
+<span id="cb7-15"><a href=""></a>    major_counter <span class="op">=</span> Counter(student[<span class="st">"major"</span>] <span class="cf">for</span> student <span class="kw">in</span> data)</span>
+<span id="cb7-16"><a href=""></a>    grade_stats <span class="op">=</span> {}</span>
+<span id="cb7-17"><a href=""></a>    </span>
+<span id="cb7-18"><a href=""></a>    <span class="cf">for</span> student <span class="kw">in</span> data:</span>
+<span id="cb7-19"><a href=""></a>        avg_grade <span class="op">=</span> <span class="bu">sum</span>(student[<span class="st">"grades"</span>]) <span class="op">/</span> <span class="bu">len</span>(student[<span class="st">"grades"</span>])</span>
+<span id="cb7-20"><a href=""></a>        grade_stats[student[<span class="st">"name"</span>]] <span class="op">=</span> {</span>
+<span id="cb7-21"><a href=""></a>            <span class="st">"average"</span>: <span class="bu">round</span>(avg_grade, <span class="dv">2</span>),</span>
+<span id="cb7-22"><a href=""></a>            <span class="st">"highest"</span>: <span class="bu">max</span>(student[<span class="st">"grades"</span>]),</span>
+<span id="cb7-23"><a href=""></a>            <span class="st">"lowest"</span>: <span class="bu">min</span>(student[<span class="st">"grades"</span>])</span>
+<span id="cb7-24"><a href=""></a>        }</span>
+<span id="cb7-25"><a href=""></a>    </span>
+<span id="cb7-26"><a href=""></a>    <span class="cf">return</span> major_counter, grade_stats</span>
+<span id="cb7-27"><a href=""></a></span>
+<span id="cb7-28"><a href=""></a>majors, stats <span class="op">=</span> analyze_student_data(student_data)</span>
+<span id="cb7-29"><a href=""></a><span class="bu">print</span>(<span class="st">"Major distribution:"</span>, <span class="bu">dict</span>(majors))</span>
+<span id="cb7-30"><a href=""></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Student statistics:"</span>)</span>
+<span id="cb7-31"><a href=""></a><span class="cf">for</span> name, stat <span class="kw">in</span> stats.items():</span>
+<span id="cb7-32"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: Avg=</span><span class="sc">{</span>stat[<span class="st">'average'</span>]<span class="sc">}</span><span class="ss">, High=</span><span class="sc">{</span>stat[<span class="st">'highest'</span>]<span class="sc">}</span><span class="ss">, Low=</span><span class="sc">{</span>stat[<span class="st">'lowest'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Major distribution: {'Computer Science': 2, 'Mathematics': 2, 'Physics': 1}
+
+Student statistics:
+Alice: Avg=87.75, High=96, Low=78
+Bob: Avg=79.5, High=89, Low=72
+Charlie: Avg=91.25, High=94, Low=87
+Diana: Avg=87.5, High=90, Low=85
+Eve: Avg=82.5, High=86, Low=79</code></pre>
+</div>
+</div>
+</section>
+<section id="data-visualization-preview" class="slide level2">
+<h2>Data Visualization Preview</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Concept</a></li><li><a href="#tabset-2-2">Data Summary</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div id="88754804" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="co"># Conceptual plotting code (would require matplotlib/seaborn)</span></span>
+<span id="cb9-2"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-3"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-4"><a href=""></a></span>
+<span id="cb9-5"><a href=""></a><span class="co"># Generate sample data</span></span>
+<span id="cb9-6"><a href=""></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb9-7"><a href=""></a>y1 <span class="op">=</span> np.sin(x)</span>
+<span id="cb9-8"><a href=""></a>y2 <span class="op">=</span> np.cos(x)</span>
+<span id="cb9-9"><a href=""></a></span>
+<span id="cb9-10"><a href=""></a><span class="co"># Note: This would create a plot in a real environment</span></span>
+<span id="cb9-11"><a href=""></a><span class="bu">print</span>(<span class="st">"Plotting sin(x) and cos(x) functions..."</span>)</span>
+<span id="cb9-12"><a href=""></a><span class="bu">print</span>(<span class="ss">f"X range: </span><span class="sc">{</span>x[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss"> to </span><span class="sc">{</span>x[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-13"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Y1 (sin) range: </span><span class="sc">{</span><span class="bu">min</span>(y1)<span class="sc">:.2f}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">max</span>(y1)<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-14"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Y2 (cos) range: </span><span class="sc">{</span><span class="bu">min</span>(y2)<span class="sc">:.2f}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">max</span>(y2)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Plotting sin(x) and cos(x) functions...
+X range: 0.00 to 10.00
+Y1 (sin) range: -1.00 to 1.00
+Y2 (cos) range: -1.00 to 1.00</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2">
+<p>This section would typically show beautiful visualizations of our student data, including:</p>
+<ul>
+<li>Grade distributions by major</li>
+<li>Individual student performance</li>
+<li>Trends and patterns in the data</li>
+</ul>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="object-oriented-programming" class="title-slide slide level1 center" data-background-color="#ea580c">
+<h1>Object-Oriented Programming</h1>
+
+</section>
+<section id="complete-class-hierarchy" class="slide level2">
+<h2>Complete Class Hierarchy</h2>
+<div class="sourceCode" id="cb11" data-code-line-numbers="1-8|10-17|19-26|28-35|37-44|46-57|59-68"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href=""></a><span class="co"># Base class definition</span></span>
+<span id="cb11-2"><a href=""></a><span class="kw">class</span> BankAccount:</span>
+<span id="cb11-3"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, account_holder, initial_balance<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb11-4"><a href=""></a>        <span class="va">self</span>.account_holder <span class="op">=</span> account_holder</span>
+<span id="cb11-5"><a href=""></a>        <span class="va">self</span>.balance <span class="op">=</span> initial_balance</span>
+<span id="cb11-6"><a href=""></a>        <span class="va">self</span>.transaction_history <span class="op">=</span> []</span>
+<span id="cb11-7"><a href=""></a>    </span>
+<span id="cb11-8"><a href=""></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>):</span>
+<span id="cb11-9"><a href=""></a>        <span class="cf">return</span> <span class="ss">f"Account(</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>account_holder<span class="sc">}</span><span class="ss">: $</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>balance<span class="sc">:.2f}</span><span class="ss">)"</span></span>
+<span id="cb11-10"><a href=""></a>    </span>
+<span id="cb11-11"><a href=""></a>    <span class="kw">def</span> deposit(<span class="va">self</span>, amount):</span>
+<span id="cb11-12"><a href=""></a>        <span class="cf">if</span> amount <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb11-13"><a href=""></a>            <span class="va">self</span>.balance <span class="op">+=</span> amount</span>
+<span id="cb11-14"><a href=""></a>            <span class="va">self</span>.transaction_history.append(<span class="ss">f"Deposited $</span><span class="sc">{</span>amount<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-15"><a href=""></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb11-16"><a href=""></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb11-17"><a href=""></a>    </span>
+<span id="cb11-18"><a href=""></a>    <span class="kw">def</span> withdraw(<span class="va">self</span>, amount):</span>
+<span id="cb11-19"><a href=""></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;</span> amount <span class="op">&lt;=</span> <span class="va">self</span>.balance:</span>
+<span id="cb11-20"><a href=""></a>            <span class="va">self</span>.balance <span class="op">-=</span> amount</span>
+<span id="cb11-21"><a href=""></a>            <span class="va">self</span>.transaction_history.append(<span class="ss">f"Withdrew $</span><span class="sc">{</span>amount<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-22"><a href=""></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb11-23"><a href=""></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb11-24"><a href=""></a>    </span>
+<span id="cb11-25"><a href=""></a>    <span class="kw">def</span> get_balance(<span class="va">self</span>):</span>
+<span id="cb11-26"><a href=""></a>        <span class="cf">return</span> <span class="va">self</span>.balance</span>
+<span id="cb11-27"><a href=""></a>    </span>
+<span id="cb11-28"><a href=""></a>    <span class="kw">def</span> get_transaction_history(<span class="va">self</span>):</span>
+<span id="cb11-29"><a href=""></a>        <span class="cf">return</span> <span class="va">self</span>.transaction_history.copy()</span>
+<span id="cb11-30"><a href=""></a></span>
+<span id="cb11-31"><a href=""></a><span class="co"># Derived classes with inheritance</span></span>
+<span id="cb11-32"><a href=""></a><span class="kw">class</span> SavingsAccount(BankAccount):</span>
+<span id="cb11-33"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, account_holder, initial_balance<span class="op">=</span><span class="dv">0</span>, interest_rate<span class="op">=</span><span class="fl">0.02</span>):</span>
+<span id="cb11-34"><a href=""></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(account_holder, initial_balance)</span>
+<span id="cb11-35"><a href=""></a>        <span class="va">self</span>.interest_rate <span class="op">=</span> interest_rate</span>
+<span id="cb11-36"><a href=""></a>    </span>
+<span id="cb11-37"><a href=""></a>    <span class="kw">def</span> apply_interest(<span class="va">self</span>):</span>
+<span id="cb11-38"><a href=""></a>        interest <span class="op">=</span> <span class="va">self</span>.balance <span class="op">*</span> <span class="va">self</span>.interest_rate</span>
+<span id="cb11-39"><a href=""></a>        <span class="va">self</span>.deposit(interest)</span>
+<span id="cb11-40"><a href=""></a>        <span class="cf">return</span> interest</span>
+<span id="cb11-41"><a href=""></a></span>
+<span id="cb11-42"><a href=""></a><span class="kw">class</span> CheckingAccount(BankAccount):</span>
+<span id="cb11-43"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, account_holder, initial_balance<span class="op">=</span><span class="dv">0</span>, overdraft_limit<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb11-44"><a href=""></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(account_holder, initial_balance)</span>
+<span id="cb11-45"><a href=""></a>        <span class="va">self</span>.overdraft_limit <span class="op">=</span> overdraft_limit</span>
+<span id="cb11-46"><a href=""></a>    </span>
+<span id="cb11-47"><a href=""></a>    <span class="kw">def</span> withdraw(<span class="va">self</span>, amount):</span>
+<span id="cb11-48"><a href=""></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;</span> amount <span class="op">&lt;=</span> (<span class="va">self</span>.balance <span class="op">+</span> <span class="va">self</span>.overdraft_limit):</span>
+<span id="cb11-49"><a href=""></a>            <span class="va">self</span>.balance <span class="op">-=</span> amount</span>
+<span id="cb11-50"><a href=""></a>            <span class="va">self</span>.transaction_history.append(<span class="ss">f"Withdrew $</span><span class="sc">{</span>amount<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-51"><a href=""></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb11-52"><a href=""></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb11-53"><a href=""></a></span>
+<span id="cb11-54"><a href=""></a><span class="co"># Demonstration of all classes</span></span>
+<span id="cb11-55"><a href=""></a><span class="bu">print</span>(<span class="st">"=== Basic Account Demo ==="</span>)</span>
+<span id="cb11-56"><a href=""></a>account <span class="op">=</span> BankAccount(<span class="st">"John Doe"</span>, <span class="dv">1000</span>)</span>
+<span id="cb11-57"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Initial: </span><span class="sc">{</span>account<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-58"><a href=""></a>account.deposit(<span class="dv">250</span>)</span>
+<span id="cb11-59"><a href=""></a>account.withdraw(<span class="dv">100</span>)</span>
+<span id="cb11-60"><a href=""></a><span class="bu">print</span>(<span class="ss">f"After transactions: </span><span class="sc">{</span>account<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-61"><a href=""></a></span>
+<span id="cb11-62"><a href=""></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Inheritance &amp; Polymorphism Demo ==="</span>)</span>
+<span id="cb11-63"><a href=""></a>accounts <span class="op">=</span> [</span>
+<span id="cb11-64"><a href=""></a>    SavingsAccount(<span class="st">"Alice"</span>, <span class="dv">5000</span>),</span>
+<span id="cb11-65"><a href=""></a>    CheckingAccount(<span class="st">"Bob"</span>, <span class="dv">1000</span>),</span>
+<span id="cb11-66"><a href=""></a>    BankAccount(<span class="st">"Charlie"</span>, <span class="dv">2000</span>)</span>
+<span id="cb11-67"><a href=""></a>]</span>
+<span id="cb11-68"><a href=""></a></span>
+<span id="cb11-69"><a href=""></a><span class="cf">for</span> account <span class="kw">in</span> accounts:</span>
+<span id="cb11-70"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">type</span>(account)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>account<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-71"><a href=""></a></span>
+<span id="cb11-72"><a href=""></a><span class="co"># Test interest on savings account</span></span>
+<span id="cb11-73"><a href=""></a>savings <span class="op">=</span> accounts[<span class="dv">0</span>]</span>
+<span id="cb11-74"><a href=""></a>interest_earned <span class="op">=</span> savings.apply_interest()</span>
+<span id="cb11-75"><a href=""></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">After applying interest: </span><span class="sc">{</span>savings<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-76"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Interest earned: $</span><span class="sc">{</span>interest_earned<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="error-handling-best-practices" class="title-slide slide level1 center" data-background-color="#9333ea">
+<h1>Error Handling &amp; Best Practices</h1>
+
+</section>
+<section id="robust-error-handling" class="slide level2">
+<h2>Robust Error Handling</h2>
+<div class="sourceCode" id="cb12" data-code-line-numbers="1-5|7-15|17-25|27-35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href=""></a><span class="kw">def</span> safe_divide(a, b):</span>
+<span id="cb12-2"><a href=""></a>    <span class="cf">try</span>:</span>
+<span id="cb12-3"><a href=""></a>        result <span class="op">=</span> a <span class="op">/</span> b</span>
+<span id="cb12-4"><a href=""></a>        <span class="cf">return</span> result, <span class="va">None</span></span>
+<span id="cb12-5"><a href=""></a>    <span class="cf">except</span> <span class="pp">ZeroDivisionError</span>:</span>
+<span id="cb12-6"><a href=""></a>        <span class="cf">return</span> <span class="va">None</span>, <span class="st">"Cannot divide by zero!"</span></span>
+<span id="cb12-7"><a href=""></a>    <span class="cf">except</span> <span class="pp">TypeError</span>:</span>
+<span id="cb12-8"><a href=""></a>        <span class="cf">return</span> <span class="va">None</span>, <span class="st">"Invalid input types!"</span></span>
+<span id="cb12-9"><a href=""></a></span>
+<span id="cb12-10"><a href=""></a><span class="kw">def</span> process_file_safely(filename):</span>
+<span id="cb12-11"><a href=""></a>    <span class="cf">try</span>:</span>
+<span id="cb12-12"><a href=""></a>        <span class="cf">with</span> <span class="bu">open</span>(filename, <span class="st">'r'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb12-13"><a href=""></a>            content <span class="op">=</span> <span class="bu">file</span>.read()</span>
+<span id="cb12-14"><a href=""></a>            <span class="cf">return</span> content</span>
+<span id="cb12-15"><a href=""></a>    <span class="cf">except</span> <span class="pp">FileNotFoundError</span>:</span>
+<span id="cb12-16"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"File '</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">' not found."</span>)</span>
+<span id="cb12-17"><a href=""></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb12-18"><a href=""></a>    <span class="cf">except</span> <span class="pp">PermissionError</span>:</span>
+<span id="cb12-19"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Permission denied to read '</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'."</span>)</span>
+<span id="cb12-20"><a href=""></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb12-21"><a href=""></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb12-22"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Unexpected error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-23"><a href=""></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb12-24"><a href=""></a></span>
+<span id="cb12-25"><a href=""></a><span class="co"># Custom exception example</span></span>
+<span id="cb12-26"><a href=""></a><span class="kw">class</span> InsufficientFundsError(<span class="pp">Exception</span>):</span>
+<span id="cb12-27"><a href=""></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, balance, amount):</span>
+<span id="cb12-28"><a href=""></a>        <span class="va">self</span>.balance <span class="op">=</span> balance</span>
+<span id="cb12-29"><a href=""></a>        <span class="va">self</span>.amount <span class="op">=</span> amount</span>
+<span id="cb12-30"><a href=""></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="ss">f"Insufficient funds: $</span><span class="sc">{</span>balance<span class="sc">:.2f}</span><span class="ss"> &lt; $</span><span class="sc">{</span>amount<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-31"><a href=""></a></span>
+<span id="cb12-32"><a href=""></a><span class="co"># Testing error handling</span></span>
+<span id="cb12-33"><a href=""></a>test_cases <span class="op">=</span> [(<span class="dv">10</span>, <span class="dv">2</span>), (<span class="dv">10</span>, <span class="dv">0</span>), (<span class="st">"10"</span>, <span class="dv">2</span>)]</span>
+<span id="cb12-34"><a href=""></a><span class="cf">for</span> a, b <span class="kw">in</span> test_cases:</span>
+<span id="cb12-35"><a href=""></a>    result, error <span class="op">=</span> safe_divide(a, b)</span>
+<span id="cb12-36"><a href=""></a>    <span class="cf">if</span> error:</span>
+<span id="cb12-37"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>error<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-38"><a href=""></a>    <span class="cf">else</span>:</span>
+<span id="cb12-39"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>result<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="interactive-demo-qa" class="title-slide slide level1 center" data-background-color="#0891b2">
+<h1>Interactive Demo &amp; Q&amp;A</h1>
+
+</section>
+<section id="key-takeaways" class="slide level2">
+<h2>🚀 Key Takeaways</h2>
+<ul>
+<li class="fragment"><strong>Functions</strong> are the building blocks of modular code</li>
+<li class="fragment"><strong>Control flow</strong> determines program execution path</li>
+<li class="fragment"><strong>Data structures</strong> organize and manage information</li>
+<li class="fragment"><strong>OOP</strong> provides powerful code organization</li>
+<li class="fragment"><strong>Error handling</strong> makes code robust and reliable</li>
+<li class="fragment"><strong>Best practices</strong> improve code quality and maintainability</li>
+</ul>
+</section>
+<section id="next-steps" class="slide level2">
+<h2>💡 Next Steps</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="practice-projects">Practice Projects</h3>
+<ul>
+<li>Build a personal finance tracker</li>
+<li>Create a simple game</li>
+<li>Develop a data analysis tool</li>
+<li>Design a web scraper</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="advanced-topics">Advanced Topics</h3>
+<ul>
+<li>Asynchronous programming</li>
+<li>Testing and debugging</li>
+<li>Package development</li>
+<li>Performance optimization</li>
+</ul>
+</div></div>
+</section>
+<section id="questions-discussion" class="slide level2">
+<h2>🤔 Questions &amp; Discussion</h2>
+<div class="r-fit-text">
+<p><strong>Thank you for your attention!</strong></p>
+</div>
+<div class="fragment">
+<p>Feel free to ask questions about: - Any code examples we’ve covered - Python best practices - Implementation details - Real-world applications</p>
+</div>
+<aside class="notes">
+<p>This is the end of the presentation. Encourage questions and provide additional examples if needed.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="resources-references" class="title-slide slide level1 center" data-background-color="#374151">
+<h1>Resources &amp; References</h1>
+
+</section>
+<section id="additional-learning-materials" class="slide level2">
+<h2>📚 Additional Learning Materials</h2>
+<ul>
+<li><strong>Official Python Documentation</strong>: <a href="https://docs.python.org">python.org</a></li>
+<li><strong>Python Enhancement Proposals (PEPs)</strong>: Style guides and best practices</li>
+<li><strong>Real Python</strong>: Comprehensive tutorials and articles</li>
+<li><strong>Automate the Boring Stuff</strong>: Practical Python programming</li>
+<li><strong>Python Crash Course</strong>: Beginner-friendly book</li>
+</ul>
+</section>
+<section id="development-tools" class="slide level2">
+<h2>🛠️ Development Tools</h2>
+<ul>
+<li><strong>IDEs</strong>: PyCharm, VS Code, Jupyter Notebooks</li>
+<li><strong>Package Management</strong>: pip, conda, poetry</li>
+<li><strong>Version Control</strong>: Git and GitHub</li>
+<li><strong>Testing</strong>: pytest, unittest</li>
+<li><strong>Code Quality</strong>: pylint, black, mypy</li>
+</ul>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Python Programming Workshop</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="slideshow_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="slideshow_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="slideshow_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="slideshow_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: true,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

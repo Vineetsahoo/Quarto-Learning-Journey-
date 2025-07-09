@@ -1,0 +1,773 @@
+---
+title: "🎬 Movie Data Analytics Presentation"
+subtitle: "Interactive Insights from TMDB Dataset"
+author: "Vineet Sahoo"
+date: today
+date-format: "MMMM DD, YYYY"
+format: 
+  revealjs:
+    theme: moon
+    transition: slide
+    background-transition: fade
+    slide-number: true
+    controls: true
+    progress: true
+    center: true
+    fig-width: 12
+    fig-height: 8
+    code-fold: true
+    highlight-style: github
+    incremental: true
+    embed-resources: false
+    navigation-mode: linear
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    footer: "Movie Data Analytics | TMDB Dataset Analysis"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# 🎬 Movie Analytics Overview
+
+## Presentation Agenda {.smaller}
+
+::: {.incremental}
+- 📊 **Dataset Overview** - Understanding our movie data
+- 📈 **Temporal Trends** - Release patterns over decades  
+- 🎭 **Genre Analysis** - Market preferences and performance
+- 💰 **Financial Insights** - Budget, revenue, and ROI analysis
+- ⭐ **Audience Engagement** - Ratings and voting patterns
+- 🎯 **Key Findings** - Strategic insights and recommendations
+- 🌟 **Featured Spotlight** - Highlighting exceptional movies
+:::
+
+::: {.notes}
+This presentation analyzes comprehensive movie data from TMDB to reveal industry trends, audience preferences, and financial performance patterns.
+:::
+
+## Why Movie Data Analytics? {.center}
+
+:::: {.columns}
+
+::: {.column width="33%" .fragment .fade-in fragment-index=1}
+### 🎯 **Industry Insights**
+Understanding market trends and audience preferences drives strategic decision-making
+:::
+
+::: {.column width="33%" .fragment .fade-in fragment-index=2}
+### 💡 **Investment Guidance** 
+Data-driven analysis reveals optimal budget allocation and genre selection
+:::
+
+::: {.column width="33%" .fragment .fade-in fragment-index=3}
+### 📊 **Performance Optimization**
+Analytics uncover patterns between production factors and commercial success
+:::
+
+::::
+
+::: {.fragment .fade-in fragment-index=4 .center}
+**Let's dive into the data!** 🚀
+:::
+
+# 📊 Dataset Overview
+
+```{python}
+#| include: false
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+from datetime import datetime
+import warnings
+warnings.filterwarnings('ignore')
+
+# Load and prepare data
+df = pd.read_csv("TMDB-Small.csv")
+df['release_year'] = pd.to_datetime(df['release_date'], errors='coerce').dt.year
+df['primary_genre'] = df['genres'].str.split(',').str[0].str.strip()
+df['profit'] = df['revenue'] - df['budget']
+df['roi'] = ((df['revenue'] - df['budget']) / df['budget'] * 100).replace([np.inf, -np.inf], np.nan)
+df['decade'] = (df['release_year'] // 10) * 10
+
+# Calculate key statistics
+total_movies = len(df)
+avg_rating = df['vote_average'].mean()
+total_revenue = df['revenue'].sum()
+avg_budget = df['budget'].mean()
+year_range = f"{int(df['release_year'].min())} - {int(df['release_year'].max())}"
+```
+
+## Key Dataset Metrics {.center}
+
+:::: {.columns}
+
+::: {.column width="50%" .fragment .fade-in fragment-index=1}
+### 📈 **Scale & Scope**
+- **Total Movies:** `{python} f"{total_movies:,}"`
+- **Time Period:** `{python} year_range`
+- **Genres:** `{python} df['primary_genre'].nunique()` categories
+- **Data Completeness:** `{python} f"{(1 - df.isnull().sum().sum() / (len(df) * len(df.columns))) * 100:.1f}%"`
+:::
+
+::: {.column width="50%" .fragment .fade-in fragment-index=2}
+### 💰 **Financial Overview**
+- **Total Revenue:** `{python} f"${total_revenue/1e9:.1f}B"`
+- **Average Budget:** `{python} f"${avg_budget/1e6:.1f}M"`
+- **Average Rating:** `{python} f"{avg_rating:.1f}/10"`
+- **Analysis Date:** `{python} datetime.now().strftime('%B %Y')`
+:::
+
+::::
+
+::: {.fragment .fade-in fragment-index=3 .center}
+*Comprehensive analysis of movie industry trends and patterns*
+:::
+
+# 📈 Temporal Analysis
+
+## Movie Production Trends
+
+```{python}
+#| fig-cap: "Evolution of Movie Production Over Time"
+
+# Create temporal analysis visualization
+fig = make_subplots(
+    rows=2, cols=1,
+    subplot_titles=('Annual Movie Releases', 'Production by Decade'),
+    vertical_spacing=0.15
+)
+
+# Filter valid years and prepare data
+valid_years = df[(df['release_year'] >= 1900) & (df['release_year'] <= 2025)]
+year_counts = valid_years['release_year'].value_counts().sort_index()
+
+# Annual releases line chart
+fig.add_trace(
+    go.Scatter(
+        x=year_counts.index,
+        y=year_counts.values,
+        mode='lines+markers',
+        name='Annual Releases',
+        line=dict(color='#FF6B6B', width=3),
+        marker=dict(size=4),
+        fill='tonexty',
+        fillcolor='rgba(255, 107, 107, 0.2)'
+    ),
+    row=1, col=1
+)
+
+# Decade analysis
+decade_counts = valid_years['decade'].value_counts().sort_index()
+decade_labels = [f"{int(d)}s" for d in decade_counts.index]
+
+fig.add_trace(
+    go.Bar(
+        x=decade_labels,
+        y=decade_counts.values,
+        name='Decade Totals',
+        marker_color='#4ECDC4',
+        text=decade_counts.values,
+        textposition='outside'
+    ),
+    row=2, col=1
+)
+
+fig.update_layout(
+    height=700,
+    showlegend=False,
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=14, color='white'),
+    title_font_size=18
+)
+
+fig.update_xaxes(title_text="Release Year", row=1, col=1, gridcolor='rgba(255,255,255,0.2)')
+fig.update_yaxes(title_text="Number of Movies", row=1, col=1, gridcolor='rgba(255,255,255,0.2)')
+fig.update_xaxes(title_text="Decade", row=2, col=1, gridcolor='rgba(255,255,255,0.2)')
+fig.update_yaxes(title_text="Total Movies", row=2, col=1, gridcolor='rgba(255,255,255,0.2)')
+
+fig.show()
+```
+
+## Key Temporal Insights {.smaller}
+
+```{python}
+#| output: asis
+
+# Calculate insights
+peak_year = year_counts.idxmax()
+peak_count = year_counts.max()
+peak_decade = decade_counts.idxmax()
+recent_avg = year_counts.tail(5).mean()
+
+print(f"""
+::: {{.incremental}}
+- 🎯 **Peak Year:** {int(peak_year)} with **{peak_count} releases**
+- 🏆 **Most Productive Decade:** {peak_decade:.0f}s with **{decade_counts.max()} total films**
+- 📊 **Recent Trend:** Average of **{recent_avg:.1f} movies/year** in last 5 years
+- 📈 **Growth Pattern:** {'Accelerating' if recent_avg > year_counts.head(10).mean() else 'Stabilizing'} production rates
+:::
+""")
+```
+
+# 🎭 Genre Analysis
+
+## Genre Distribution & Performance
+
+```{python}
+#| fig-cap: "Comprehensive Genre Analysis Dashboard"
+
+# Create comprehensive genre analysis
+fig = make_subplots(
+    rows=2, cols=2,
+    subplot_titles=('Top Genres by Count', 'Average Ratings by Genre', 
+                   'Revenue Performance', 'Popularity vs Quality'),
+    specs=[[{"type": "bar"}, {"type": "bar"}],
+           [{"type": "bar"}, {"type": "scatter"}]]
+)
+
+# 1. Top genres by count
+top_genres = df['primary_genre'].value_counts().head(8)
+fig.add_trace(
+    go.Bar(
+        y=top_genres.index,
+        x=top_genres.values,
+        orientation='h',
+        name='Movie Count',
+        marker_color='#FF9F43',
+        text=top_genres.values,
+        textposition='outside'
+    ),
+    row=1, col=1
+)
+
+# 2. Average ratings by genre
+genre_ratings = df.groupby('primary_genre')['vote_average'].mean().sort_values(ascending=False).head(8)
+fig.add_trace(
+    go.Bar(
+        x=genre_ratings.index,
+        y=genre_ratings.values,
+        name='Average Rating',
+        marker_color='#26DE81',
+        text=[f'{x:.1f}' for x in genre_ratings.values],
+        textposition='outside'
+    ),
+    row=1, col=2
+)
+
+# 3. Revenue by genre
+genre_revenue = df.groupby('primary_genre')['revenue'].sum().sort_values(ascending=False).head(8)
+genre_revenue_billions = genre_revenue / 1e9
+fig.add_trace(
+    go.Bar(
+        x=genre_revenue_billions.index,
+        y=genre_revenue_billions.values,
+        name='Revenue (Billions)',
+        marker_color='#FD79A8',
+        text=[f'${x:.1f}B' for x in genre_revenue_billions.values],
+        textposition='outside'
+    ),
+    row=2, col=1
+)
+
+# 4. Popularity vs Quality scatter
+genre_stats = df.groupby('primary_genre').agg({
+    'vote_count': 'mean',
+    'vote_average': 'mean',
+    'title': 'count'
+}).reset_index()
+genre_stats = genre_stats[genre_stats['title'] >= 10]
+
+fig.add_trace(
+    go.Scatter(
+        x=genre_stats['vote_count'],
+        y=genre_stats['vote_average'],
+        mode='markers+text',
+        text=genre_stats['primary_genre'],
+        textposition='top center',
+        name='Genre Performance',
+        marker=dict(
+            size=genre_stats['title'],
+            sizemode='diameter',
+            sizeref=2.*max(genre_stats['title'])/(40.**2),
+            color=genre_stats['vote_average'],
+            colorscale='Viridis',
+            showscale=True,
+            colorbar=dict(title="Avg Rating")
+        )
+    ),
+    row=2, col=2
+)
+
+fig.update_layout(
+    height=800,
+    showlegend=False,
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12, color='white')
+)
+
+# Update axes
+fig.update_xaxes(title_text="Number of Movies", row=1, col=1)
+fig.update_xaxes(title_text="Genre", row=1, col=2, tickangle=45)
+fig.update_yaxes(title_text="Rating", row=1, col=2)
+fig.update_xaxes(title_text="Genre", row=2, col=1, tickangle=45)
+fig.update_yaxes(title_text="Revenue ($B)", row=2, col=1)
+fig.update_xaxes(title_text="Average Vote Count", row=2, col=2)
+fig.update_yaxes(title_text="Average Rating", row=2, col=2)
+
+fig.show()
+```
+
+## Genre Market Leaders {.center}
+
+```{python}
+#| output: asis
+
+# Calculate genre insights
+most_popular = top_genres.index[0]
+highest_rated = genre_ratings.index[0]
+top_revenue = genre_revenue.index[0]
+
+print(f"""
+:::: {{.columns}}
+
+::: {{.column width="33%" .fragment .fade-in fragment-index=1}}
+### 🎬 **Most Produced**
+**{most_popular.title()}**  
+*{top_genres.iloc[0]} movies*
+:::
+
+::: {{.column width="33%" .fragment .fade-in fragment-index=2}}
+### ⭐ **Highest Rated**
+**{highest_rated.title()}**  
+*{genre_ratings.iloc[0]:.1f}/10 average*
+:::
+
+::: {{.column width="33%" .fragment .fade-in fragment-index=3}}
+### 💰 **Top Revenue**
+**{top_revenue.title()}**  
+*${genre_revenue.iloc[0]/1e9:.1f}B total*
+:::
+
+::::
+""")
+```
+
+# 💰 Financial Insights
+
+## Revenue vs Budget Analysis
+
+```{python}
+#| fig-cap: "Financial Performance Metrics"
+
+# Create financial analysis
+fig = make_subplots(
+    rows=2, cols=2,
+    subplot_titles=('Budget vs Revenue', 'ROI Distribution', 
+                   'Budget Trends Over Time', 'Top Grossing Movies'),
+    specs=[[{"type": "scatter"}, {"type": "histogram"}],
+           [{"type": "scatter"}, {"type": "bar"}]]
+)
+
+# 1. Budget vs Revenue scatter
+valid_finance = df[(df['budget'] > 0) & (df['revenue'] > 0)]
+fig.add_trace(
+    go.Scatter(
+        x=valid_finance['budget']/1e6,
+        y=valid_finance['revenue']/1e6,
+        mode='markers',
+        name='Movies',
+        marker=dict(
+            size=8,
+            color=valid_finance['vote_average'],
+            colorscale='RdYlBu',
+            showscale=True,
+            colorbar=dict(title="Rating", x=0.48)
+        ),
+        text=valid_finance['title'],
+        hovertemplate='<b>%{text}</b><br>Budget: $%{x:.1f}M<br>Revenue: $%{y:.1f}M<extra></extra>'
+    ),
+    row=1, col=1
+)
+
+# Add break-even line
+max_val = max(valid_finance['budget'].max(), valid_finance['revenue'].max()) / 1e6
+fig.add_trace(
+    go.Scatter(
+        x=[0, max_val],
+        y=[0, max_val],
+        mode='lines',
+        name='Break-even',
+        line=dict(dash='dash', color='red')
+    ),
+    row=1, col=1
+)
+
+# 2. ROI Distribution
+valid_roi = df[(df['roi'].notna()) & (df['roi'] > -100) & (df['roi'] < 1000)]
+fig.add_trace(
+    go.Histogram(
+        x=valid_roi['roi'],
+        nbinsx=30,
+        name='ROI Distribution',
+        marker_color='#FD79A8'
+    ),
+    row=1, col=2
+)
+
+# 3. Budget trends over time
+budget_by_year = df[df['budget'] > 0].groupby('release_year')['budget'].mean()
+budget_by_year = budget_by_year[(budget_by_year.index >= 1980) & (budget_by_year.index <= 2025)]
+fig.add_trace(
+    go.Scatter(
+        x=budget_by_year.index,
+        y=budget_by_year.values/1e6,
+        mode='lines+markers',
+        name='Average Budget',
+        line=dict(color='#74B9FF', width=3)
+    ),
+    row=2, col=1
+)
+
+# 4. Top grossing movies
+top_movies = df.nlargest(8, 'revenue')[['title', 'revenue']]
+fig.add_trace(
+    go.Bar(
+        y=[title[:15] + '...' if len(title) > 15 else title for title in top_movies['title']],
+        x=top_movies['revenue']/1e9,
+        orientation='h',
+        name='Revenue',
+        marker_color='#00B894',
+        text=[f'${x:.1f}B' for x in top_movies['revenue']/1e9],
+        textposition='outside'
+    ),
+    row=2, col=2
+)
+
+fig.update_layout(
+    height=800,
+    showlegend=False,
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12, color='white')
+)
+
+# Update axes labels
+fig.update_xaxes(title_text="Budget ($M)", row=1, col=1)
+fig.update_yaxes(title_text="Revenue ($M)", row=1, col=1)
+fig.update_xaxes(title_text="ROI (%)", row=1, col=2)
+fig.update_yaxes(title_text="Frequency", row=1, col=2)
+fig.update_xaxes(title_text="Release Year", row=2, col=1)
+fig.update_yaxes(title_text="Avg Budget ($M)", row=2, col=1)
+fig.update_xaxes(title_text="Revenue ($B)", row=2, col=2)
+
+fig.show()
+```
+
+## Financial Performance Summary {.smaller}
+
+```{python}
+#| output: asis
+
+# Calculate financial insights
+avg_budget_millions = valid_finance['budget'].mean() / 1e6
+avg_revenue_millions = valid_finance['revenue'].mean() / 1e6
+avg_roi = valid_roi['roi'].mean()
+profitable_pct = (valid_finance['revenue'] > valid_finance['budget']).mean() * 100
+top_grosser = df.loc[df['revenue'].idxmax()]
+
+print(f"""
+::: {{.incremental}}
+- 💵 **Average Investment:** ${avg_budget_millions:.1f}M budget generates ${avg_revenue_millions:.1f}M revenue
+- 📈 **Return on Investment:** {avg_roi:.1f}% average ROI across all profitable films  
+- 🎯 **Success Rate:** {profitable_pct:.1f}% of movies are financially profitable
+- 🏆 **Box Office Champion:** "{top_grosser['title']}" (${top_grosser['revenue']/1e9:.1f}B)
+- 💡 **Investment Insight:** Higher budgets show positive correlation with revenue
+:::
+""")
+```
+
+# ⭐ Audience Engagement
+
+## Rating Patterns & Preferences
+
+```{python}
+#| fig-cap: "Audience Engagement and Rating Analysis"
+
+# Create audience engagement analysis
+fig = make_subplots(
+    rows=2, cols=2,
+    subplot_titles=('Rating Distribution', 'Votes vs Rating Correlation', 
+                   'Top Rated Movies', 'Engagement by Runtime'),
+    specs=[[{"type": "histogram"}, {"type": "scatter"}],
+           [{"type": "bar"}, {"type": "box"}]]
+)
+
+# 1. Rating distribution
+fig.add_trace(
+    go.Histogram(
+        x=df['vote_average'],
+        nbinsx=25,
+        name='Rating Distribution',
+        marker_color='#6C5CE7'
+    ),
+    row=1, col=1
+)
+
+# 2. Vote count vs rating scatter
+high_engagement = df[df['vote_count'] > 100]
+fig.add_trace(
+    go.Scatter(
+        x=high_engagement['vote_count'],
+        y=high_engagement['vote_average'],
+        mode='markers',
+        name='High Engagement',
+        marker=dict(
+            size=6,
+            color='#FDCB6E',
+            opacity=0.7
+        ),
+        text=high_engagement['title'],
+        hovertemplate='<b>%{text}</b><br>Votes: %{x}<br>Rating: %{y}<extra></extra>'
+    ),
+    row=1, col=2
+)
+
+# 3. Top rated movies (min 500 votes)
+popular_movies = df[df['vote_count'] >= 500]
+top_rated = popular_movies.nlargest(8, 'vote_average')
+fig.add_trace(
+    go.Bar(
+        y=[title[:20] + '...' if len(title) > 20 else title for title in top_rated['title']],
+        x=top_rated['vote_average'],
+        orientation='h',
+        name='Top Rated',
+        marker_color='#E17055',
+        text=[f'{x:.1f}' for x in top_rated['vote_average']],
+        textposition='outside'
+    ),
+    row=2, col=1
+)
+
+# 4. Rating by runtime categories
+runtime_bins = pd.cut(df['runtime'], bins=4, labels=['Short', 'Medium', 'Long', 'Epic'])
+runtime_data = []
+runtime_labels = []
+for category in ['Short', 'Medium', 'Long', 'Epic']:
+    if category in runtime_bins.values:
+        ratings = df[runtime_bins == category]['vote_average'].dropna()
+        if len(ratings) > 0:
+            runtime_data.append(ratings)
+            runtime_labels.append(category)
+
+for i, (label, data) in enumerate(zip(runtime_labels, runtime_data)):
+    fig.add_trace(
+        go.Box(
+            y=data,
+            name=label,
+            marker_color=['#00CEC9', '#FDCB6E', '#E17055', '#6C5CE7'][i]
+        ),
+        row=2, col=2
+    )
+
+fig.update_layout(
+    height=800,
+    showlegend=False,
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12, color='white')
+)
+
+# Update axes
+fig.update_xaxes(title_text="Rating", row=1, col=1)
+fig.update_yaxes(title_text="Frequency", row=1, col=1)
+fig.update_xaxes(title_text="Vote Count", row=1, col=2)
+fig.update_yaxes(title_text="Rating", row=1, col=2)
+fig.update_xaxes(title_text="Rating", row=2, col=1)
+fig.update_xaxes(title_text="Runtime Category", row=2, col=2)
+fig.update_yaxes(title_text="Rating", row=2, col=2)
+
+fig.show()
+```
+
+## Audience Behavior Insights {.center}
+
+```{python}
+#| output: asis
+
+# Calculate audience insights
+avg_rating_all = df['vote_average'].mean()
+high_rated_count = (df['vote_average'] >= 8.0).sum()
+most_voted = df.loc[df['vote_count'].idxmax()]
+correlation = high_engagement['vote_count'].corr(high_engagement['vote_average'])
+
+print(f"""
+:::: {{.columns}}
+
+::: {{.column width="50%" .fragment .fade-in fragment-index=1}}
+### 📊 **Rating Patterns**
+- **Average Rating:** {avg_rating_all:.1f}/10
+- **Highly Rated Films:** {high_rated_count} movies (8.0+)
+- **Rating Range:** {df['vote_average'].min():.1f} - {df['vote_average'].max():.1f}
+:::
+
+::: {{.column width="50%" .fragment .fade-in fragment-index=2}}
+### 👥 **Engagement Metrics**
+- **Most Voted:** "{most_voted['title'][:25]}..."
+- **Vote Count:** {most_voted['vote_count']:,} reviews
+- **Popularity-Quality Correlation:** {correlation:.3f}
+:::
+
+::::
+
+::: {{.fragment .fade-in fragment-index=3 .center}}
+*Higher engagement generally correlates with better ratings*
+:::
+""")
+```
+
+# 🎯 Key Findings
+
+## Strategic Insights {.center}
+
+```{python}
+#| output: asis
+
+# Calculate comprehensive insights
+recent_movies = df[df['release_year'] >= 2010]
+classic_movies = df[df['release_year'] < 1990]
+
+recent_avg_budget = recent_movies['budget'].mean() / 1e6
+recent_avg_rating = recent_movies['vote_average'].mean()
+classic_avg_rating = classic_movies['vote_average'].mean()
+
+print(f"""
+:::: {{.columns}}
+
+::: {{.column width="50%" .fragment .fade-in fragment-index=1}}
+### 📈 **Market Evolution**
+- Modern films (2010+): **${recent_avg_budget:.1f}M** average budget
+- Quality consistency: **{recent_avg_rating:.1f}/10** (recent) vs **{classic_avg_rating:.1f}/10** (classics)
+- Production growth reflects industry maturation
+:::
+
+::: {{.column width="50%" .fragment .fade-in fragment-index=2}}
+### 💡 **Success Patterns**
+- Genre diversification increases market reach
+- Higher budgets correlate with revenue potential
+- Audience engagement drives long-term success
+:::
+
+::::
+""")
+```
+
+## Business Recommendations {.smaller}
+
+::: {.incremental}
+- 🎬 **Genre Strategy:** Focus on profitable genres while exploring innovative storytelling
+- 💰 **Budget Optimization:** Balance production costs with target audience reach
+- ⭐ **Quality Focus:** Prioritize storytelling quality for sustained audience engagement
+- 📊 **Data-Driven Decisions:** Use analytics to guide investment and marketing strategies
+- 🌍 **Market Expansion:** Consider international markets for revenue diversification
+:::
+
+# 🌟 Featured Spotlight
+
+## Exceptional Movie Showcase
+
+```{python}
+#| output: asis
+
+# Select a high-quality featured movie
+featured_candidates = df[(df['vote_average'] >= 8.0) & (df['vote_count'] >= 1000)]
+if len(featured_candidates) > 0:
+    featured = featured_candidates.sample(1).iloc[0]
+else:
+    featured = df.sample(1).iloc[0]
+
+# Format movie details
+title = featured['title']
+year = int(featured['release_year']) if pd.notna(featured['release_year']) else 'N/A'
+rating = featured['vote_average']
+votes = int(featured['vote_count'])
+runtime = int(featured['runtime']) if pd.notna(featured['runtime']) else 'N/A'
+genre = featured['primary_genre']
+overview = featured['overview'] if pd.notna(featured['overview']) else 'No description available.'
+
+print(f"""
+### 🏆 {title} ({year})
+
+:::: {{.columns}}
+
+::: {{.column width="40%" .fragment .fade-in fragment-index=1}}
+**Movie Details:**
+- **Genre:** {genre.title()}
+- **Rating:** ⭐ {rating}/10
+- **Votes:** 👥 {votes:,}
+- **Runtime:** ⏱️ {runtime} min
+:::
+
+::: {{.column width="60%" .fragment .fade-in fragment-index=2}}
+**Synopsis:**
+{overview[:200]}{'...' if len(overview) > 200 else ''}
+:::
+
+::::
+""")
+
+# Add financial details if available
+if featured['revenue'] > 0 and featured['budget'] > 0:
+    profit = (featured['revenue'] - featured['budget']) / 1e6
+    roi = ((featured['revenue'] - featured['budget']) / featured['budget']) * 100
+    print(f"""
+::: {{.fragment .fade-in fragment-index=3 .center}}
+**Financial Performance:** Budget ${featured['budget']/1e6:.1f}M → Revenue ${featured['revenue']/1e6:.1f}M (ROI: {roi:.1f}%)
+:::
+""")
+```
+
+# 📋 Conclusion
+
+## Summary & Next Steps {.center}
+
+:::: {.columns}
+
+::: {.column width="50%" .fragment .fade-in fragment-index=1}
+### 🎯 **What We Learned**
+- Movie industry shows consistent growth patterns
+- Genre preferences drive market dynamics  
+- Financial success correlates with audience engagement
+- Data analytics provides actionable insights
+:::
+
+::: {.column width="50%" .fragment .fade-in fragment-index=2}
+### 🚀 **Future Opportunities**
+- Streaming platform integration analysis
+- International market expansion studies
+- Real-time audience sentiment tracking
+- AI-powered content recommendation systems
+:::
+
+::::
+
+::: {.fragment .fade-in fragment-index=3 .center}
+## Thank You! 🎬
+
+**Questions & Discussion**
+
+*Data-driven insights for the entertainment industry*
+:::
+
+::: {.notes}
+This presentation demonstrated how data analytics can reveal valuable insights about the movie industry, from production trends to audience preferences and financial performance patterns.
+:::

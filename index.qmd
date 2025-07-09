@@ -1,0 +1,330 @@
+---
+title: "📊 Enhanced Data Science Showcase"
+subtitle: "A Modern Quarto Document with Interactive Visualizations"
+author: "Vineet Sahoo"
+date: today
+date-format: "MMMM DD, YYYY"
+toc: true
+toc-depth: 3
+toc-title: "Contents"
+echo: false
+warning: false
+message: false
+bibliography: references.bib
+jupyter: python3
+format:
+    html: 
+        theme: cosmo
+        code-fold: true
+        code-summary: "Show Code"
+        smooth-scroll: true
+        css: enhanced-style.css
+        fig-width: 8
+        fig-height: 5
+    pdf:
+        documentclass: article
+        geometry: margin=1in
+        fontsize: 12pt
+        execute:
+            echo: false
+            warning: false
+    revealjs:
+        theme: moon
+        transition: slide
+        background-transition: fade
+        highlight-style: monokai
+        code-fold: true
+        code-summary: "Show Code"
+        slide-number: true
+        controls: true
+        progress: true
+        history: true
+        center: true
+        touch: true
+        loop: false
+        rtl: false
+        navigation-mode: linear
+        controls-layout: bottom-right
+        controls-back-arrows: faded
+        fig-width: 10
+        fig-height: 6
+execute:
+    freeze: auto
+---
+
+```{python}
+#| tags: [parameters]
+#| include: false
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+from datetime import datetime
+
+# Set styling
+plt.style.use('seaborn-v0_8')
+sns.set_palette("husl")
+
+# Parameters
+primary_color = "#6366F1"
+accent_color = "#EC4899"
+success_color = "#10B981"
+```
+
+::: {.hero-section}
+# 🚀 Welcome to Modern Data Analysis
+
+*Exploring the power of Quarto for creating beautiful, interactive documents*
+
+**Created by:** Vineet Sahoo | **Date:** `{python} datetime.now().strftime('%B %d, %Y')`
+:::
+
+## 🎯 Overview
+
+This enhanced document demonstrates the capabilities of Quarto for creating professional data science reports. We'll explore various visualization techniques, interactive elements, and modern styling approaches.
+
+::: {.callout-note icon="lightbulb"}
+## What You'll Find Here
+- **Interactive Visualizations** using Plotly
+- **Statistical Analysis** with clear explanations  
+- **Modern Design** with custom CSS styling
+- **Responsive Layout** that works on all devices
+:::
+
+## 📈 Data Visualization Gallery
+
+### Random Data Analysis
+
+Let's start with some basic data exploration using randomly generated datasets:
+
+```{python}
+#| label: fig-scatter
+#| fig-cap: "Interactive scatter plot showing the relationship between two random variables"
+#| column: page
+
+# Generate more interesting random data
+np.random.seed(42)
+n_points = 200
+
+# Create correlated data
+x = np.random.normal(50, 15, n_points)
+y = 2 * x + np.random.normal(0, 10, n_points)
+categories = np.random.choice(['Group A', 'Group B', 'Group C'], n_points)
+sizes = np.random.uniform(5, 25, n_points)
+
+# Create DataFrame
+df = pd.DataFrame({
+    'X_Variable': x,
+    'Y_Variable': y,
+    'Category': categories,
+    'Size': sizes
+})
+
+# Create interactive scatter plot
+fig = px.scatter(
+    df, 
+    x='X_Variable', 
+    y='Y_Variable',
+    color='Category',
+    size='Size',
+    hover_data=['X_Variable', 'Y_Variable'],
+    title="Interactive Scatter Plot Analysis",
+    color_discrete_sequence=['#6366F1', '#EC4899', '#10B981']
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12),
+    height=500
+)
+
+fig.show()
+```
+
+### Statistical Distribution Analysis
+
+```{python}
+#| label: fig-distributions
+#| fig-cap: "Comparison of different statistical distributions"
+#| layout-ncol: 2
+
+# Generate different distributions
+sample_size = 1000
+normal_data = np.random.normal(100, 15, sample_size)
+exponential_data = np.random.exponential(2, sample_size)
+
+# Create subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Normal distribution
+ax1.hist(normal_data, bins=30, alpha=0.7, color=primary_color, edgecolor='white')
+ax1.set_title('Normal Distribution', fontsize=14, fontweight='bold')
+ax1.set_xlabel('Value')
+ax1.set_ylabel('Frequency')
+ax1.grid(True, alpha=0.3)
+
+# Exponential distribution
+ax2.hist(exponential_data, bins=30, alpha=0.7, color=accent_color, edgecolor='white')
+ax2.set_title('Exponential Distribution', fontsize=14, fontweight='bold')
+ax2.set_xlabel('Value')
+ax2.set_ylabel('Frequency')
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+## 📊 Interactive Dashboard Elements
+
+### Key Metrics Summary
+
+```{python}
+#| echo: false
+
+# Calculate summary statistics
+mean_x = df['X_Variable'].mean()
+mean_y = df['Y_Variable'].mean()
+correlation = df['X_Variable'].corr(df['Y_Variable'])
+total_points = len(df)
+```
+
+::: {.metrics-grid}
+
+::: {.metric-card}
+**Total Data Points**  
+`{python} f"{total_points:,}"`
+:::
+
+::: {.metric-card}
+**Mean X Value**  
+`{python} f"{mean_x:.1f}"`
+:::
+
+::: {.metric-card}
+**Mean Y Value**  
+`{python} f"{mean_y:.1f}"`
+:::
+
+::: {.metric-card}
+**Correlation**  
+`{python} f"{correlation:.3f}"`
+:::
+
+:::
+
+### Time Series Simulation
+
+```{python}
+#| label: fig-timeseries
+#| fig-cap: "Simulated time series data with trend and seasonality"
+
+# Generate time series data
+dates = pd.date_range('2023-01-01', periods=365, freq='D')
+trend = np.linspace(100, 150, 365)
+seasonal = 10 * np.sin(2 * np.pi * np.arange(365) / 365.25 * 4)
+noise = np.random.normal(0, 5, 365)
+values = trend + seasonal + noise
+
+ts_df = pd.DataFrame({
+    'Date': dates,
+    'Value': values
+})
+
+# Create interactive time series plot
+fig = px.line(
+    ts_df, 
+    x='Date', 
+    y='Value',
+    title="Time Series Analysis with Trend and Seasonality"
+)
+
+fig.update_traces(line_color='#6366F1', line_width=2)
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12),
+    height=400,
+    xaxis_title="Date",
+    yaxis_title="Value"
+)
+
+fig.show()
+```
+
+## 🎨 Design Elements
+
+### Typography Showcase
+
+#### Primary Heading
+**Bold text for emphasis** and *italic text for style*
+
+#### Secondary Information
+Regular paragraph text that demonstrates the clean typography and spacing used throughout this document.
+
+### Links and References
+
+- [Visit my GitHub](https://github.com/) for more projects
+- [Quarto Documentation](https://quarto.org/) for learning more
+- [Plotly Python](https://plotly.com/python/) for interactive visualizations
+
+### Enhanced Table
+
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics by category"
+
+# Create summary table
+summary_table = df.groupby('Category').agg({
+    'X_Variable': ['mean', 'std'],
+    'Y_Variable': ['mean', 'std'],
+    'Size': ['mean', 'count']
+}).round(2)
+
+# Flatten column names
+summary_table.columns = ['X_Mean', 'X_Std', 'Y_Mean', 'Y_Std', 'Avg_Size', 'Count']
+summary_table = summary_table.reset_index()
+
+# Display as nice table
+summary_table
+```
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **Interactive Plots** | Plotly-powered visualizations | ✅ Complete |
+| **Modern Styling** | Custom CSS with responsive design | ✅ Complete |
+| **Code Folding** | Clean presentation with hidden code | ✅ Complete |
+| **Multiple Formats** | HTML and PDF output support | ✅ Complete |
+
+## 🔍 Technical Implementation
+
+::: {.callout-tip}
+## Implementation Highlights
+This document showcases several advanced Quarto features:
+
+- **Custom CSS styling** for professional appearance
+- **Interactive Plotly visualizations** for better data exploration
+- **Responsive grid layouts** for metrics display
+- **Code folding** to maintain clean presentation
+- **Multiple output formats** (HTML and PDF)
+:::
+
+## 📚 References & Citations
+
+The methodologies and visualizations in this document are inspired by modern data science practices [@asaniczka2024; @asaniczka2024a].
+
+## 🎊 Conclusion
+
+This enhanced Quarto document demonstrates the power of combining:
+
+- **Beautiful Design** with custom CSS styling
+- **Interactive Elements** using modern web technologies  
+- **Professional Layout** suitable for presentations and reports
+- **Reproducible Research** with embedded code and analysis
+
+---
+
+*Document generated on `{python} datetime.now().strftime('%B %d, %Y at %I:%M %p')` using Quarto*
+

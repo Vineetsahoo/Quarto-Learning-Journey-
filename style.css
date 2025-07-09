@@ -1,0 +1,342 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+/* Modern Movie Dashboard Styling */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Root Variables */
+:root {
+  --primary-color: #6C5CE7;
+  --secondary-color: #A29BFE;
+  --accent-color: #FF6B9D;
+  --success-color: #00B894;
+  --warning-color: #FDCB6E;
+  --danger-color: #E84393;
+  --dark-color: #2D3748;
+  --light-color: #F7FAFC;
+  --border-color: #E2E8F0;
+  --shadow-light: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-medium: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-heavy: 0 10px 25px rgba(0,0,0,0.15);
+  --gradient-primary: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+  --gradient-accent: linear-gradient(135deg, #FF6B9D 0%, #FF8E9B 100%);
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  margin: 0;
+  padding: 0;
+}
+
+/* Dashboard Container */
+.dashboard {
+  background: var(--light-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-heavy);
+  margin: 20px;
+  overflow: hidden;
+}
+
+/* Header Styles */
+.dashboard-title {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 24px 32px;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  text-align: center;
+  border-radius: 12px 12px 0 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  background: white;
+  border-bottom: 3px solid var(--border-color);
+  padding: 0 32px;
+}
+
+.nav-tabs .nav-link {
+  color: var(--dark-color);
+  font-weight: 500;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 16px 24px;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-tabs .nav-link:hover {
+  background: rgba(108, 92, 231, 0.1);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.nav-tabs .nav-link.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-medium);
+}
+
+/* Value Boxes */
+.valuebox {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.valuebox:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-heavy);
+}
+
+.valuebox::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+.valuebox .valuebox-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #64748B;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.valuebox .valuebox-value {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--dark-color);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.valuebox .valuebox-icon {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  opacity: 0.2;
+  color: var(--primary-color);
+}
+
+/* Chart Containers */
+.plotly-graph-div {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+  background: white;
+  margin: 16px;
+  border: 1px solid var(--border-color);
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  margin: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+.card-header {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 16px 24px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-bottom: none;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+/* Tab Content */
+.tabset-panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  margin: 16px;
+  overflow: hidden;
+}
+
+.tabset-panel .nav-tabs {
+  background: #F8F9FA;
+  border-bottom: 2px solid var(--border-color);
+  padding: 0 24px;
+  margin: 0;
+}
+
+.tabset-panel .nav-tabs .nav-link {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  font-weight: 500;
+  padding: 12px 20px;
+  margin-right: 4px;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+}
+
+.tabset-panel .nav-tabs .nav-link:hover {
+  background: rgba(108, 92, 231, 0.1);
+  color: var(--primary-color);
+}
+
+.tabset-panel .nav-tabs .nav-link.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 -2px 8px rgba(108, 92, 231, 0.3);
+}
+
+.tabset-panel .tab-content {
+  padding: 24px;
+  background: white;
+}
+
+/* Section Headers */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  margin: 32px 0;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+}
+
+/* Dashboard Page Layout */
+.dashboard-page {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  margin: 16px;
+  overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard {
+    margin: 10px;
+    border-radius: 8px;
+  }
+  
+  .dashboard-title {
+    font-size: 1.8rem;
+    padding: 20px;
+  }
+  
+  .valuebox {
+    margin: 8px;
+    padding: 16px;
+  }
+  
+  .valuebox .valuebox-value {
+    font-size: 1.8rem;
+  }
+  
+  .card {
+    margin: 8px;
+  }
+  
+  .plotly-graph-div {
+    margin: 8px;
+  }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Print Styles */
+@media print {
+  .dashboard {
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .valuebox:hover,
+  .card:hover {
+    transform: none;
+    box-shadow: var(--shadow-light);
+  }
+}

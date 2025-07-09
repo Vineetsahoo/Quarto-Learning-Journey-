@@ -1,0 +1,427 @@
+---
+format: 
+  revealjs:
+    theme: dark
+    transition: slide
+    background-transition: fade
+    highlight-style: github
+    code-line-numbers: true
+    scrollable: true
+    navigation-mode: vertical
+    controls: true
+    progress: true
+    hash-one-based-index: true
+    slide-number: c/t
+    show-slide-number: all
+    preview-links: auto
+    chalkboard: true
+title: "Advanced Python Programming Concepts"
+subtitle: "Interactive Code Demonstrations"
+author: "Vineet Sahoo"
+date: "July 8, 2025"
+logo: ""
+footer: "Python Programming Workshop"
+echo: true
+code-fold: false
+execute:
+  freeze: auto
+---
+
+# Welcome to Python Programming {background-color="#1e3a8a"}
+
+## 🎯 Learning Objectives
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- **Functions & Control Flow**
+- **Data Structures**
+- **Object-Oriented Programming**
+- **Error Handling**
+:::
+
+::: {.column width="50%"}
+- **File Operations**
+- **Data Analysis**
+- **Best Practices**
+- **Real-world Examples**
+:::
+
+::::
+
+::: {.notes}
+This presentation covers essential Python programming concepts with interactive code examples and practical demonstrations.
+:::
+
+# Basic Functions & Control Flow {background-color="#059669"}
+
+## Simple Function Example
+
+::: {.panel-tabset}
+
+### Code
+``` {python}
+def example_function(a):
+    if a > 0:
+        return "A is positive!"
+    elif a < 0:
+        return "A is negative!"
+    else:
+        return "A is zero!"
+
+# Test the function
+test_values = [5, -3, 0, 10]
+for value in test_values:
+    result = example_function(value)
+    print(f"example_function({value}) = {result}")
+```
+
+### Output
+The function will evaluate different numbers and return appropriate messages based on their sign.
+
+:::
+
+## Function with Step-by-Step Walkthrough
+
+::: {.fragment}
+Let's trace through the execution step by step:
+:::
+
+``` {.python code-line-numbers="1|2-3|4-5|6-7|8-12|1-12"}
+def example_function(a):
+    if a > 0:
+        return "A is positive!"
+    elif a < 0:
+        return "A is negative!"
+    else:
+        return "A is zero!"
+
+# Interactive testing
+user_input = 42
+print(f"Testing with value: {user_input}")
+print(f"Result: {example_function(user_input)}")
+```
+
+# Advanced Functions {background-color="#7c3aed"}
+
+## Lambda Functions & Higher-Order Functions
+
+``` {python}
+# Lambda functions for quick operations
+square = lambda x: x ** 2
+is_even = lambda x: x % 2 == 0
+
+# Higher-order function example
+def apply_operation(numbers, operation):
+    return [operation(num) for num in numbers]
+
+# Demonstration
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+squared_numbers = apply_operation(numbers, square)
+even_numbers = [num for num in numbers if is_even(num)]
+
+print("Original numbers:", numbers)
+print("Squared numbers:", squared_numbers)
+print("Even numbers:", even_numbers)
+```
+
+## Decorators in Action
+
+``` {.python code-line-numbers="1-6|8-11|13-19|21-24"}
+import time
+from functools import wraps
+
+def timing_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"{func.__name__} executed in {end_time - start_time:.4f} seconds")
+        return result
+    return wrapper
+
+@timing_decorator
+def slow_calculation(n):
+    """Simulate a slow calculation"""
+    total = 0
+    for i in range(n):
+        total += i ** 2
+    return total
+
+# Test the decorated function
+result = slow_calculation(100000)
+print(f"Calculation result: {result}")
+```
+
+# Data Structures & Analysis {background-color="#dc2626"}
+
+## Working with Complex Data
+
+``` {python}
+import json
+from collections import defaultdict, Counter
+
+# Sample data structure
+student_data = [
+    {"name": "Alice", "grades": [85, 92, 78, 96], "major": "Computer Science"},
+    {"name": "Bob", "grades": [76, 81, 72, 89], "major": "Mathematics"},
+    {"name": "Charlie", "grades": [94, 87, 91, 93], "major": "Computer Science"},
+    {"name": "Diana", "grades": [88, 85, 90, 87], "major": "Physics"},
+    {"name": "Eve", "grades": [79, 83, 86, 82], "major": "Mathematics"}
+]
+
+# Data analysis
+def analyze_student_data(data):
+    major_counter = Counter(student["major"] for student in data)
+    grade_stats = {}
+    
+    for student in data:
+        avg_grade = sum(student["grades"]) / len(student["grades"])
+        grade_stats[student["name"]] = {
+            "average": round(avg_grade, 2),
+            "highest": max(student["grades"]),
+            "lowest": min(student["grades"])
+        }
+    
+    return major_counter, grade_stats
+
+majors, stats = analyze_student_data(student_data)
+print("Major distribution:", dict(majors))
+print("\nStudent statistics:")
+for name, stat in stats.items():
+    print(f"{name}: Avg={stat['average']}, High={stat['highest']}, Low={stat['lowest']}")
+```
+
+## Data Visualization Preview
+
+::: {.panel-tabset}
+
+### Concept
+``` {python}
+# Conceptual plotting code (would require matplotlib/seaborn)
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate sample data
+x = np.linspace(0, 10, 100)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+# Note: This would create a plot in a real environment
+print("Plotting sin(x) and cos(x) functions...")
+print(f"X range: {x[0]:.2f} to {x[-1]:.2f}")
+print(f"Y1 (sin) range: {min(y1):.2f} to {max(y1):.2f}")
+print(f"Y2 (cos) range: {min(y2):.2f} to {max(y2):.2f}")
+```
+
+### Data Summary
+This section would typically show beautiful visualizations of our student data, including:
+
+- Grade distributions by major
+- Individual student performance
+- Trends and patterns in the data
+
+:::
+
+# Object-Oriented Programming {background-color="#ea580c"}
+
+## Complete Class Hierarchy
+
+``` {.python code-line-numbers="1-8|10-17|19-26|28-35|37-44|46-57|59-68"}
+# Base class definition
+class BankAccount:
+    def __init__(self, account_holder, initial_balance=0):
+        self.account_holder = account_holder
+        self.balance = initial_balance
+        self.transaction_history = []
+    
+    def __str__(self):
+        return f"Account({self.account_holder}: ${self.balance:.2f})"
+    
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            self.transaction_history.append(f"Deposited ${amount:.2f}")
+            return True
+        return False
+    
+    def withdraw(self, amount):
+        if 0 < amount <= self.balance:
+            self.balance -= amount
+            self.transaction_history.append(f"Withdrew ${amount:.2f}")
+            return True
+        return False
+    
+    def get_balance(self):
+        return self.balance
+    
+    def get_transaction_history(self):
+        return self.transaction_history.copy()
+
+# Derived classes with inheritance
+class SavingsAccount(BankAccount):
+    def __init__(self, account_holder, initial_balance=0, interest_rate=0.02):
+        super().__init__(account_holder, initial_balance)
+        self.interest_rate = interest_rate
+    
+    def apply_interest(self):
+        interest = self.balance * self.interest_rate
+        self.deposit(interest)
+        return interest
+
+class CheckingAccount(BankAccount):
+    def __init__(self, account_holder, initial_balance=0, overdraft_limit=100):
+        super().__init__(account_holder, initial_balance)
+        self.overdraft_limit = overdraft_limit
+    
+    def withdraw(self, amount):
+        if 0 < amount <= (self.balance + self.overdraft_limit):
+            self.balance -= amount
+            self.transaction_history.append(f"Withdrew ${amount:.2f}")
+            return True
+        return False
+
+# Demonstration of all classes
+print("=== Basic Account Demo ===")
+account = BankAccount("John Doe", 1000)
+print(f"Initial: {account}")
+account.deposit(250)
+account.withdraw(100)
+print(f"After transactions: {account}")
+
+print("\n=== Inheritance & Polymorphism Demo ===")
+accounts = [
+    SavingsAccount("Alice", 5000),
+    CheckingAccount("Bob", 1000),
+    BankAccount("Charlie", 2000)
+]
+
+for account in accounts:
+    print(f"{type(account).__name__}: {account}")
+
+# Test interest on savings account
+savings = accounts[0]
+interest_earned = savings.apply_interest()
+print(f"\nAfter applying interest: {savings}")
+print(f"Interest earned: ${interest_earned:.2f}")
+```
+
+# Error Handling & Best Practices {background-color="#9333ea"}
+
+## Robust Error Handling
+
+``` {.python code-line-numbers="1-5|7-15|17-25|27-35"}
+def safe_divide(a, b):
+    try:
+        result = a / b
+        return result, None
+    except ZeroDivisionError:
+        return None, "Cannot divide by zero!"
+    except TypeError:
+        return None, "Invalid input types!"
+
+def process_file_safely(filename):
+    try:
+        with open(filename, 'r') as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
+        return None
+    except PermissionError:
+        print(f"Permission denied to read '{filename}'.")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
+
+# Custom exception example
+class InsufficientFundsError(Exception):
+    def __init__(self, balance, amount):
+        self.balance = balance
+        self.amount = amount
+        super().__init__(f"Insufficient funds: ${balance:.2f} < ${amount:.2f}")
+
+# Testing error handling
+test_cases = [(10, 2), (10, 0), ("10", 2)]
+for a, b in test_cases:
+    result, error = safe_divide(a, b)
+    if error:
+        print(f"Error: {error}")
+    else:
+        print(f"{a} / {b} = {result}")
+```
+
+# Interactive Demo & Q&A {background-color="#0891b2"}
+
+## 🚀 Key Takeaways
+
+::: {.incremental}
+- **Functions** are the building blocks of modular code
+- **Control flow** determines program execution path
+- **Data structures** organize and manage information
+- **OOP** provides powerful code organization
+- **Error handling** makes code robust and reliable
+- **Best practices** improve code quality and maintainability
+:::
+
+## 💡 Next Steps
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Practice Projects
+- Build a personal finance tracker
+- Create a simple game
+- Develop a data analysis tool
+- Design a web scraper
+:::
+
+::: {.column width="50%"}
+### Advanced Topics
+- Asynchronous programming
+- Testing and debugging
+- Package development
+- Performance optimization
+:::
+
+::::
+
+## 🤔 Questions & Discussion
+
+::: {.r-fit-text}
+**Thank you for your attention!**
+:::
+
+::: {.fragment}
+Feel free to ask questions about:
+- Any code examples we've covered
+- Python best practices
+- Implementation details
+- Real-world applications
+:::
+
+::: {.notes}
+This is the end of the presentation. Encourage questions and provide additional examples if needed.
+:::
+
+# Resources & References {background-color="#374151"}
+
+## 📚 Additional Learning Materials
+
+- **Official Python Documentation**: [python.org](https://docs.python.org)
+- **Python Enhancement Proposals (PEPs)**: Style guides and best practices
+- **Real Python**: Comprehensive tutorials and articles
+- **Automate the Boring Stuff**: Practical Python programming
+- **Python Crash Course**: Beginner-friendly book
+
+## 🛠️ Development Tools
+
+- **IDEs**: PyCharm, VS Code, Jupyter Notebooks
+- **Package Management**: pip, conda, poetry
+- **Version Control**: Git and GitHub
+- **Testing**: pytest, unittest
+- **Code Quality**: pylint, black, mypy
+

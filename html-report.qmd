@@ -1,0 +1,224 @@
+---
+author: "Vineet Sahoo"
+title: "🎬 Movie Data Analysis Report"
+subtitle: "Exploring TMDB Movie Dataset"
+date: today
+date-format: "MMMM DD, YYYY"
+format:
+    html: 
+        theme: flatly
+        toc: true
+        toc-location: left
+        toc-depth: 3
+        code-fold: true
+        code-summary: "Show code"
+        code-tools: true
+        smooth-scroll: true
+        css: simple-style.css
+        fig-width: 10
+        fig-height: 7
+        fig-responsive: true
+        embed-resources: false
+        page-layout: full
+        grid:
+            sidebar-width: 280px
+            body-width: 900px
+            margin-width: 150px
+        execute:
+            warning: false
+            message: false
+            echo: true
+            freeze: auto
+execute:
+    warning: false
+    message: false
+    echo: true
+---
+
+::: {.hero-banner}
+# 🎭 Welcome to Movie Data Insights
+*Discover trends, patterns, and stories hidden in thousands of movies*
+:::
+
+## 📊 Dataset Overview
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+from helpers import plot_release_year_distribution, create_keyword_wordcloud, create_genre_distribution
+
+# Set style for better looking plots
+plt.style.use('seaborn-v0_8')
+sns.set_palette("husl")
+
+df = pd.read_csv("TMDB-Small.csv")
+
+print(f"📁 Dataset contains {len(df):,} movies")
+print(f"📅 Date range: {df['release_date'].min()} to {df['release_date'].max()}")
+print(f"⭐ Average rating: {df['vote_average'].mean():.1f}/10")
+print(f"💰 Total revenue: ${df['revenue'].sum()/1e9:.1f}B")
+```
+
+## 📈 Movie Release Trends
+
+```{python}
+#| fig-cap: "Distribution of movie releases over the years shows the evolution of cinema"
+#| fig-align: "center"
+#| label: fig-year-dist
+
+plot_release_year_distribution(df)
+```
+
+The movie industry has seen remarkable growth, with a significant increase in productions starting from the 1990s.
+
+::: {.content-visible when-format="html"}
+
+## 🎯 Interactive Movie Explorer
+
+Explore the relationship between audience engagement and movie quality across different genres:
+
+```{python}
+#| fig-cap: "Interactive scatter plot showing vote count vs average rating by genre"
+#| fig-width: 12
+#| fig-height: 8
+
+df['primary_genre'] = df['genres'].str.split(',').str[0].str.strip()
+
+# Create a more polished interactive plot optimized for HTML
+fig = px.scatter(
+    df, 
+    x='vote_count', 
+    y='vote_average', 
+    hover_data=['title', 'release_date'], 
+    color='primary_genre',
+    size='popularity',
+    title='🎬 Movie Performance: Popularity vs Quality',
+    labels={
+        'vote_count': 'Number of Votes',
+        'vote_average': 'Average Rating (1-10)',
+        'primary_genre': 'Genre'
+    },
+    hover_name='title'
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12),
+    height=600,
+    margin=dict(t=50, b=50, l=50, r=50),
+    legend=dict(
+        orientation="v",
+        yanchor="top",
+        y=1,
+        xanchor="left",
+        x=1.01
+    )
+)
+
+fig.update_traces(
+    marker=dict(
+        line=dict(width=1, color='white'),
+        opacity=0.8
+    )
+)
+
+fig.show()
+```
+
+:::
+
+## ☁️ Popular Keywords
+
+What themes and concepts dominate cinema? Let's find out:
+
+```{python}
+#| fig-cap: "Word cloud revealing the most common themes in movie keywords"
+#| fig-align: "center"
+
+create_keyword_wordcloud(df)
+```
+
+## 🎭 Genre Landscape
+
+```{python}
+#| fig-cap: "Distribution of movies across different genres"
+#| fig-align: "center"
+#| fig-width: 10
+#| fig-height: 6
+
+create_genre_distribution(df)
+```
+
+---
+
+## 🎲 Featured Movie
+
+Let's spotlight a random movie from our dataset:
+
+```{python}
+#| echo: false
+
+# Select a random high-rated movie for better showcase
+high_rated = df[df['vote_average'] >= 7.0]
+movie = high_rated.sample(1) if len(high_rated) > 0 else df.sample(1)
+
+title = movie['title'].values[0]
+overview = movie['overview'].values[0]
+rating = movie['vote_average'].values[0]
+year = pd.to_datetime(movie['release_date'].values[0]).year
+genre = movie['genres'].values[0].split(',')[0] if pd.notna(movie['genres'].values[0]) else "Unknown"
+url = f"https://image.tmdb.org/t/p/w600_and_h900_bestv2{movie['poster_path'].values[0]}" if pd.notna(movie['poster_path'].values[0]) else ""
+```
+
+::: {.movie-spotlight}
+
+### `{python} title` ({`python} year`})
+
+::: {.columns}
+
+::: {.column width="30%"}
+![Movie Poster](`{python} url`){width="100%"}
+:::
+
+::: {.column width="70%"}
+
+**Genre:** `{python} genre`  
+**Rating:** ⭐ `{python} f"{rating}/10"`
+
+**Synopsis:**  
+`{python} overview`
+
+:::
+
+:::
+
+:::
+
+---
+
+## 📝 Key Insights
+
+::: {.insights-grid}
+
+::: {.insight-card}
+**📈 Industry Growth**  
+The film industry has experienced exponential growth, particularly from the 1990s onwards.
+:::
+
+::: {.insight-card}
+**🎭 Genre Diversity**  
+Drama and comedy remain the most popular genres, but the landscape shows rich diversity.
+:::
+
+::: {.insight-card}
+**⭐ Quality vs Popularity**  
+There's an interesting relationship between vote count and ratings across different genres.
+:::
+
+:::
+
+*Analysis completed on `{python} pd.Timestamp.now().strftime('%B %d, %Y')`*

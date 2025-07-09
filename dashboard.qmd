@@ -1,0 +1,556 @@
+---
+format: 
+  dashboard:
+    theme: [default, style.css]
+    logo: https://raw.githubusercontent.com/quarto-dev/quarto-web/main/favicon.png
+    nav-buttons: 
+      - icon: github
+        href: https://github.com/
+title: "🎬 TMDB Movie Analytics Dashboard"
+author: "Vineet Sahoo"
+orientation: columns
+---
+
+```{python}
+#| include: false
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
+
+# Load and process data
+df = pd.read_csv("TMDB-Small.csv")
+df['primary_genre'] = df['genres'].str.split(',').str[0].str.strip()
+df['release_year'] = pd.to_datetime(df['release_date']).dt.year
+df['revenue_millions'] = df['revenue'] / 1_000_000
+df['budget_millions'] = df['budget'] / 1_000_000
+df['profit_millions'] = df['revenue_millions'] - df['budget_millions']
+
+# Filter for major genres
+comedy = df[df['primary_genre'] == 'Comedy']
+drama = df[df['primary_genre'] == 'Drama']
+action = df[df['primary_genre'] == 'Action']
+
+# Color schemes
+comedy_colors = ["#FF6B9D", "#FF8E9B", "#FFB3BA"]
+drama_colors = ["#4A90E2", "#7BB3F0", "#A8D0F7"] 
+action_colors = ["#FF6B35", "#FF8A5B", "#FFA07A"]
+general_colors = ["#6C5CE7", "#A29BFE", "#74B9FF"]
+```
+
+# 📊 Overview
+
+## Row {height=30%}
+
+```{python}
+#| component: valuebox
+#| title: "🎭 Total Movies"
+dict(
+    icon = "film",
+    color = "primary",
+    value = f"{len(df):,}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "⭐ Average Rating"
+dict(
+    icon = "star-fill",
+    color = "warning",
+    value = f"{df['vote_average'].mean():.1f}/10",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "💰 Total Revenue"
+dict(
+    icon = "currency-dollar",
+    color = "success",
+    value = f"${df['revenue'].sum()/1e9:.1f}B",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "🎬 Top Genre"
+dict(
+    icon = "trophy-fill",
+    color = "info",
+    value = df['primary_genre'].value_counts().index[0],
+)
+```
+
+## Row {height=70%}
+
+### Column {width=60%}
+
+```{python}
+#| title: "📈 Genre Performance Analysis"
+#| padding: 0
+
+# Create genre summary
+genre_stats = df.groupby('primary_genre').agg({
+    'vote_average': 'mean',
+    'vote_count': 'mean',
+    'revenue': 'mean',
+    'id': 'count'
+}).round(2)
+
+genre_stats.columns = ['Avg Rating', 'Avg Votes', 'Avg Revenue', 'Movie Count']
+genre_stats = genre_stats[genre_stats['Movie Count'] >= 10].sort_values('Avg Rating', ascending=False)
+
+fig = px.scatter(
+    genre_stats.reset_index(), 
+    x='Avg Votes', 
+    y='Avg Rating',
+    size='Movie Count',
+    color='Avg Revenue',
+    hover_name='primary_genre',
+    title="Genre Performance: Rating vs Popularity",
+    color_continuous_scale="Viridis",
+    size_max=40
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=12),
+    showlegend=False,
+    height=400
+)
+
+fig
+```
+
+### Column {width=40%}
+
+```{python}
+#| title: "🎭 Top 10 Genres by Count"
+
+top_genres = df['primary_genre'].value_counts().head(10)
+
+fig = px.bar(
+    x=top_genres.values,
+    y=top_genres.index,
+    orientation='h',
+    color=top_genres.values,
+    color_continuous_scale="Plasma"
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    font=dict(size=11),
+    showlegend=False,
+    height=400,
+    yaxis=dict(categoryorder='total ascending'),
+    xaxis_title="Number of Movies",
+    yaxis_title=""
+)
+
+fig
+```
+
+# 😂 Comedy Analysis
+
+## Row {height=25%}
+
+```{python}
+#| component: valuebox
+#| title: "🎭 Comedy Movies"
+dict(
+    icon = "emoji-laughing",
+    color = "#FF6B9D",
+    value = f"{len(comedy):,}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "⭐ Avg Rating"
+dict(
+    icon = "star-half",
+    color = "#FF6B9D",
+    value = f"{comedy['vote_average'].mean():.2f}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "👥 Avg Votes"
+dict(
+    icon = "people-fill",
+    color = "#FF6B9D",
+    value = f"{comedy['vote_count'].mean():,.0f}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "💰 Best Revenue"
+dict(
+    icon = "cash-stack",
+    color = "#FF6B9D",
+    value = f"${comedy['revenue'].max()/1e6:.0f}M",
+)
+```
+
+## Row {height=75%}
+
+### Column {.tabset}
+
+#### 📊 Rating Distribution
+
+```{python}
+#| title: "Comedy Movie Ratings Distribution"
+
+fig = px.histogram(
+    comedy, 
+    x='vote_average', 
+    nbins=20,
+    color_discrete_sequence=comedy_colors,
+    title="Distribution of Comedy Movie Ratings"
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Rating (0-10)",
+    yaxis_title="Number of Movies",
+    showlegend=False
+)
+
+fig.add_vline(x=comedy['vote_average'].mean(), line_dash="dash", 
+              annotation_text=f"Average: {comedy['vote_average'].mean():.1f}")
+
+fig
+```
+
+#### 💫 Performance Scatter
+
+```{python}
+#| title: "Comedy: Votes vs Rating Performance"
+
+fig = px.scatter(
+    comedy, 
+    x='vote_count', 
+    y='vote_average', 
+    hover_data=['title', 'release_year'],
+    color='revenue',
+    size='popularity',
+    color_continuous_scale="Reds",
+    title="Comedy Movies: Popularity vs Quality"
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Vote Count",
+    yaxis_title="Average Rating",
+    height=400
+)
+
+fig
+```
+
+#### 📅 Timeline
+
+```{python}
+#| title: "Comedy Movies Over Time"
+
+comedy_yearly = comedy.groupby('release_year').agg({
+    'id': 'count',
+    'vote_average': 'mean',
+    'revenue': 'mean'
+}).reset_index()
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+fig.add_trace(
+    go.Scatter(x=comedy_yearly['release_year'], y=comedy_yearly['id'],
+               name="Movie Count", line=dict(color='#FF6B9D', width=3)),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Scatter(x=comedy_yearly['release_year'], y=comedy_yearly['vote_average'],
+               name="Avg Rating", line=dict(color='#FFB3BA', width=2, dash='dash')),
+    secondary_y=True,
+)
+
+fig.update_xaxes(title_text="Year")
+fig.update_yaxes(title_text="Number of Movies", secondary_y=False)
+fig.update_yaxes(title_text="Average Rating", secondary_y=True)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    height=400,
+    title="Comedy Movie Trends Over Time"
+)
+
+fig
+```
+
+# 🎭 Drama Analysis
+
+## Row {height=25%}
+
+```{python}
+#| component: valuebox
+#| title: "🎭 Drama Movies"
+dict(
+    icon = "mask-face",
+    color = "#4A90E2",
+    value = f"{len(drama):,}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "⭐ Avg Rating"
+dict(
+    icon = "star-fill",
+    color = "#4A90E2",
+    value = f"{drama['vote_average'].mean():.2f}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "🏆 Top Rated"
+dict(
+    icon = "trophy",
+    color = "#4A90E2",
+    value = f"{drama['vote_average'].max():.1f}",
+)
+```
+
+```{python}
+#| component: valuebox
+#| title: "⏱️ Avg Runtime"
+dict(
+    icon = "clock",
+    color = "#4A90E2",
+    value = f"{drama['runtime'].mean():.0f}m",
+)
+```
+
+## Row {height=75%}
+
+### Column {.tabset}
+
+#### 📊 Rating Distribution
+
+```{python}
+#| title: "Drama Movie Ratings Distribution"
+
+fig = px.histogram(
+    drama, 
+    x='vote_average', 
+    nbins=20,
+    color_discrete_sequence=drama_colors,
+    title="Distribution of Drama Movie Ratings"
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Rating (0-10)",
+    yaxis_title="Number of Movies",
+    showlegend=False
+)
+
+fig.add_vline(x=drama['vote_average'].mean(), line_dash="dash", 
+              annotation_text=f"Average: {drama['vote_average'].mean():.1f}")
+
+fig
+```
+
+#### 💰 Financial Performance
+
+```{python}
+#| title: "Drama: Revenue vs Budget Analysis"
+
+drama_finance = drama[(drama['revenue'] > 0) & (drama['budget'] > 0)].copy()
+
+fig = px.scatter(
+    drama_finance,
+    x='budget_millions',
+    y='revenue_millions',
+    hover_data=['title', 'vote_average'],
+    color='vote_average',
+    size='vote_count',
+    color_continuous_scale="Blues",
+    title="Drama Movies: Budget vs Revenue Performance"
+)
+
+# Add break-even line
+max_val = max(drama_finance['budget_millions'].max(), drama_finance['revenue_millions'].max())
+fig.add_trace(go.Scatter(x=[0, max_val], y=[0, max_val], 
+                        mode='lines', name='Break-even Line',
+                        line=dict(dash='dash', color='red')))
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Budget (Millions USD)",
+    yaxis_title="Revenue (Millions USD)",
+    height=400
+)
+
+fig
+```
+
+#### 🏆 Top Performers
+
+```{python}
+#| title: "Top 15 Drama Movies by Rating"
+
+top_dramas = drama.nlargest(15, 'vote_average')[['title', 'vote_average', 'vote_count', 'release_year']]
+
+fig = px.bar(
+    top_dramas,
+    x='vote_average',
+    y='title',
+    orientation='h',
+    color='vote_count',
+    hover_data=['release_year'],
+    color_continuous_scale="Blues",
+    title="Highest Rated Drama Movies"
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    yaxis=dict(categoryorder='total ascending'),
+    xaxis_title="Average Rating",
+    yaxis_title="",
+    height=400
+)
+
+fig
+```
+
+# 🚀 Comparative Analysis
+
+## Row {height=40%}
+
+```{python}
+#| title: "🎭 Comedy vs Drama: Key Metrics Comparison"
+#| padding: 0
+
+metrics_comparison = pd.DataFrame({
+    'Metric': ['Count', 'Avg Rating', 'Avg Revenue (M)', 'Avg Budget (M)', 'Avg Runtime'],
+    'Comedy': [
+        len(comedy),
+        comedy['vote_average'].mean(),
+        comedy['revenue'].mean() / 1e6,
+        comedy['budget'].mean() / 1e6,
+        comedy['runtime'].mean()
+    ],
+    'Drama': [
+        len(drama),
+        drama['vote_average'].mean(),
+        drama['revenue'].mean() / 1e6,
+        drama['budget'].mean() / 1e6,
+        drama['runtime'].mean()
+    ]
+})
+
+fig = go.Figure()
+
+fig.add_trace(go.Bar(
+    name='Comedy',
+    x=metrics_comparison['Metric'],
+    y=metrics_comparison['Comedy'],
+    marker_color='#FF6B9D',
+    text=metrics_comparison['Comedy'].round(1),
+    textposition='outside'
+))
+
+fig.add_trace(go.Bar(
+    name='Drama',
+    x=metrics_comparison['Metric'],
+    y=metrics_comparison['Drama'],
+    marker_color='#4A90E2',
+    text=metrics_comparison['Drama'].round(1),
+    textposition='outside'
+))
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    barmode='group',
+    title="Comedy vs Drama: Side-by-Side Comparison",
+    height=300,
+    showlegend=True
+)
+
+fig
+```
+
+## Row {height=60%}
+
+### Column {width=50%}
+
+```{python}
+#| title: "🎬 Genre Evolution Timeline"
+
+# Create yearly comparison
+yearly_comparison = df[df['primary_genre'].isin(['Comedy', 'Drama', 'Action'])].groupby(['release_year', 'primary_genre']).size().reset_index(name='count')
+
+fig = px.line(
+    yearly_comparison,
+    x='release_year',
+    y='count',
+    color='primary_genre',
+    title="Genre Popularity Over Time",
+    color_discrete_map={'Comedy': '#FF6B9D', 'Drama': '#4A90E2', 'Action': '#FF6B35'}
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Year",
+    yaxis_title="Number of Movies",
+    height=350,
+    legend_title="Genre"
+)
+
+fig
+```
+
+### Column {width=50%}
+
+```{python}
+#| title: "💰 Revenue Distribution by Genre"
+
+revenue_data = df[df['revenue'] > 0]
+top_revenue_genres = revenue_data.groupby('primary_genre')['revenue'].sum().nlargest(8).index
+revenue_filtered = revenue_data[revenue_data['primary_genre'].isin(top_revenue_genres)]
+
+fig = px.box(
+    revenue_filtered,
+    x='primary_genre',
+    y='revenue',
+    color='primary_genre',
+    title="Revenue Distribution Across Top Genres"
+)
+
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
+    xaxis_title="Genre",
+    yaxis_title="Revenue (USD)",
+    showlegend=False,
+    height=350,
+    xaxis_tickangle=45,
+    yaxis_type="log"
+)
+
+fig
+```

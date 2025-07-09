@@ -1,0 +1,26 @@
+{
+  "index.qmd": {
+    "index.html": "f156a06f",
+    "index.tex": "9eb8e6c8"
+  },
+  "html-report.qmd": {
+    "html-report.html": "dddc7244",
+    "html-report.tex": "4a656727"
+  },
+  "dashboard.qmd": {
+    "dashboard.html": "5a5998a0"
+  },
+  "parameterized-report.qmd": {
+    "parameterized-report.html": "bc057c58",
+    "parameterized-report.tex": "2e606c48"
+  },
+  "pdf-report.qmd": {
+    "pdf-report.tex": "134b2b31"
+  },
+  "presentation.qmd": {
+    "presentation.html": "8cdb8b66"
+  },
+  "slideshow.qmd": {
+    "slideshow.html": "ebeef36b"
+  }
+}
